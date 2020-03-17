@@ -1,0 +1,16 @@
+{
+  "name": "dealbreakers",
+  "version": "1.0.0",
+  "description": "a game of finding that perfect date",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Nick Tang",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  }
+}
