@@ -26,6 +26,8 @@ const IO = {
 
     onPlayerJoinedGame: (data) => {
         console.log(data);
+        App.displayWaitingRoom();
+        App.updatePlayers(data.players);
     },
 };
 
@@ -70,7 +72,7 @@ const App = {
         App.numPlayersInRoom += 1;
 
         App.displayWaitingRoom();
-        App.updatePlayerList(data.username);
+        App.updatePlayers([data.username]);
     },
 
     // game logic
@@ -106,6 +108,7 @@ const App = {
         const roomCode = $('#roomCodeInput').val();
         if(roomCode.length >= 5) {
             console.log("You joined room "+ roomCode);
+            App.gameId = roomCode;
             socket.emit('joinGame', {gameId: roomCode, username: App.username});
             // emit some socket event so the backend can add user to game room and check room is valid
             //App.displayWaitingRoom();
@@ -123,8 +126,12 @@ const App = {
         App.gameArea.html(App.templateJoinScreen);
     },
 
-    updatePlayerList: (name) => {
-        $("#players").append('<p class="font-weight-bold">'+name+'</p>')
+    updatePlayers: (players) => {
+        // clear existing ones
+        $("#players").empty();
+        players.map((player) => {
+            $("#players").append('<p class="font-weight-bold">'+player+'</p>')
+        });
     }
 };
 

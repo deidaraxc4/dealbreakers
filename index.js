@@ -33,17 +33,14 @@ const onNewWebSocketConnection = (socket) => {
         console.log(data);
         socket.emit("newGameCreated", {gameId: gameId, mySocketId: socket.id, username: data.username});
         socket.join(gameId.toString());
-        //gameRooms.push(gameId);
+
         gameRooms[gameId] = new GameRoom(gameId);
         gameRooms[gameId].players.push(data.username);
         console.log(io.sockets.adapter.rooms);
-        //socket.to(gameId.toString()).emit("newGameCreated", {gameId: gameId, mySocketId: socket.id, username: data.username});
-        //console.log(io.sockets.clients(gameId.toString()));
     };
 
     const joinGame = (data) => {
         console.log(data)
-        //const numGameId = Number(data.gameId)
         // check if gameId is good
         if(data.gameId in gameRooms) {
             socket.join(data.gameId);
