@@ -19,7 +19,7 @@
     <script id="intro-screen-template" type="text/template">
 
         <div class="container-sm text-wrap">
-            <h1 class="display-4 text-center">Dealbreakers</h1>
+            <h1 class="display-4 text-center" style="font-size:8vw;">Dealbreakers</h1>
 
             <div class="form-group">
                 <label class="h4" for="usernameInput">Name</label>
@@ -33,8 +33,21 @@
 
     <script id="waiting-screen-template" type="text/template">
 
-        <div>
-            <h1>Waiting room</h1>
+        <div class="container-sm">
+            <h1 class="text-center">Go to localhost:3000</h1>
+            <p class="lead text-center">ENTER ROOM CODE</p>
+            <h4 id="roomCode" class="text-center">QWERTY</h4>
+        </div>
+        <br />
+        <div class="container-sm text-center player-list-container">
+            <p class="lead">Looking for dates:</p>
+            <p class="font-weight-bold">Mr Bean</p>
+            <p class="font-weight-bold">Simon</p>
+            <p class="font-weight-bold">Dennis</p>
+        </div>
+
+        <div class="fixed-bottom">
+            <button id="btnReady" type="button" class="btn btn-primary btn-lg btn-block">Ready</button>
         </div>
 
     </script>

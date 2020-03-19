@@ -12,3 +12,11 @@ html, body {
     width: 49%;
     margin-bottom: 0;
 } */
+
+.player-list-container {
+    background-color: #333;
+    width: 90vw;
+    color: #fff;
+    padding: 10px 0;
+    border-radius: 10px;
+}

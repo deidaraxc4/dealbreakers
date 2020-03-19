@@ -64,7 +64,7 @@ const App = {
         const roomCode = $('#roomCodeInput').val();
         if(roomCode) {
             console.log("You joined room "+ roomCode);
-            // emit some socket event so the backend can add user to game room
+            // emit some socket event so the backend can add user to game room and check room is valid
             App.displayWaitingRoom();
             return;
         }
