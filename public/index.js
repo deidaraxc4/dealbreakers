@@ -20,8 +20,4 @@ const main = () => {
     // socket.on("welcome", welcomeMessage => welcomeElement.innerText = welcomeMessage);
 }
 
-$(document).ready(() => {
-    $("#intro-screen-template").html("hi");
-});
-
 main();
