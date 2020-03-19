@@ -22,11 +22,33 @@
             <h1 class="display-4 text-center">Dealbreakers</h1>
 
             <div class="form-group">
-                <label for="exampleFormControlInput1">Enter name</label>
-                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="Who are you">
+                <label class="h4" for="usernameInput">Name</label>
+                <input type="text" class="form-control" id="usernameInput" placeholder="Enter your name">
             </div>
             <button id="btnCreateGame" type="button" class="btn btn-primary btn-lg btn-block">Create</button>
             <button id="btnJoinGame" type="button" class="btn btn-secondary btn-lg btn-block">Join</button>
+        </div>
+
+    </script>
+
+    <script id="waiting-screen-template" type="text/template">
+
+        <div>
+            <h1>Waiting room</h1>
+        </div>
+
+    </script>
+
+    <script id="join-screen-template" type="text/template">
+
+        <div class="container-sm">
+            <h1>Join room</h1>
+            <div class="form-group">
+                <label class="h4" for="roomCodeInput">Room Code</label>
+                <input type="text" class="form-control" id="roomCodeInput" placeholder="Enter 5 digit Code">
+            </div>
+            <button id="btnBackIntro" type="button" class="btn btn-secondary btn-lg btn-block">Back</button>
+            <button id="btnJoinRoom" type="button" class="btn btn-primary btn-lg btn-block">Join</button>
         </div>
 
     </script>
