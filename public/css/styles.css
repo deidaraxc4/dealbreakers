@@ -1,0 +1,14 @@
+html, body {
+    background-color: #de746d;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.btn {
+    display: inline-block;
+    height: 100%;
+    width: 49%;
+    margin-bottom: 0;
+}
