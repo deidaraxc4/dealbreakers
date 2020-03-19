@@ -1,12 +1,42 @@
+const socket = io();
+socket.on("connect", () => socket.emit("hello", `hello I am here`));
+
 // namespace for code relating to socket.io
 const IO = {
     init: () => {
+        // bind events
+        IO.bindEvents();
+    },
 
+    bindEvents: () => {
+        socket.on("newGameCreated", IO.onNewGameCreated);
+        socket.on("badGameId", IO.onBadGameId);
+        socket.on("playerJoinedGame", IO.onPlayerJoinedGame)
+    },
+
+    onNewGameCreated: (data) => {
+        console.log(data);
+        App.gameInit(data);
+    },
+
+    onBadGameId: (data) => {
+        console.log(data);
+        window.alert(data.message);
+    },
+
+    onPlayerJoinedGame: (data) => {
+        console.log(data);
     },
 };
 
 // namespace for code relating to the game logic
 const App = {
+
+    gameId: 0,
+    mySocketId: '',
+    currentRound: 0,
+    numPlayersInRoom: 0,
+    username: '',
 
     init: () => {
         App.cacheElements();
@@ -34,14 +64,25 @@ const App = {
         App.doc.on('click', '#btnJoinRoom', App.joinGameRoom);
     },
 
+    gameInit: (data) => {
+        App.gameId = data.gameId;
+        App.mySocketId = data.mySocketId;
+        App.numPlayersInRoom += 1;
+
+        App.displayWaitingRoom();
+        App.updatePlayerList(data.username);
+    },
+
     // game logic
     createGame: () => {
         const username = $('#usernameInput').val();
+        App.username = username;
         console.log(username);
         if(username) {
             console.log("you clicked create game");
             // need to emit some socket event so the backend can create a random gameId and join the gameId with socket.join
-            App.displayWaitingRoom();
+            socket.emit('createNewGame', { username: username });
+            // App.displayWaitingRoom();
             return;
         }
         window.alert("You forgot your name");
@@ -50,6 +91,7 @@ const App = {
     // go to join game screen
     joinGame: () => {
         const username = $('#usernameInput').val();
+        App.username = username;
         console.log(username);
         if(username) {
             console.log("you clicked join game");
@@ -62,10 +104,11 @@ const App = {
     // actually join a game
     joinGameRoom: () => {
         const roomCode = $('#roomCodeInput').val();
-        if(roomCode) {
+        if(roomCode.length >= 5) {
             console.log("You joined room "+ roomCode);
+            socket.emit('joinGame', {gameId: roomCode, username: App.username});
             // emit some socket event so the backend can add user to game room and check room is valid
-            App.displayWaitingRoom();
+            //App.displayWaitingRoom();
             return;
         }
         window.alert("Room codes are 5 digits long, can you count?");
@@ -73,20 +116,23 @@ const App = {
 
     displayWaitingRoom: () => {
         App.gameArea.html(App.templateWaitingScreen);
+        $("#roomCode").text(App.gameId);
     },
 
     displayJoinRoom: () => {
         App.gameArea.html(App.templateJoinScreen);
     },
+
+    updatePlayerList: (name) => {
+        $("#players").append('<p class="font-weight-bold">'+name+'</p>')
+    }
 };
 
 const main = () => {
-    const socket = io();
-    socket.on("connect", () => socket.emit("hello", `hello I am here`));
-
     console.log("jquery");
 
     // initialize
+    IO.init();
     App.init();
 
 };
