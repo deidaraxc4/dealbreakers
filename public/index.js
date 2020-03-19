@@ -11,17 +11,34 @@ const App = {
     init: () => {
         App.cacheElements();
         App.showInitScreen();
+        App.bindEvents();
     },
 
     cacheElements: () => {
+        App.doc = $(document);
+
         App.gameArea = $('#gameArea');
+        App.templateIntroScreen = $('#intro-screen-template').html();
     },
 
     showInitScreen: () => {
-        $('#gameArea').html()
-        const templateIntroScreen = $('#intro-screen-template').html();
-        App.gameArea.html(templateIntroScreen);
+        App.gameArea.html(App.templateIntroScreen);
     },
+
+    bindEvents: () => {
+        App.doc.on('click', '#btnCreateGame', App.createGame);
+        App.doc.on('click', '#btnJoinGame', App.joinGame);
+    },
+
+    // game logic
+    createGame: () => {
+        // todo check for name input
+        console.log("you clicked create game")
+    },
+
+    joinGame: () => {
+        console.log("you clicked join game")
+    }
 };
 
 const main = () => {
