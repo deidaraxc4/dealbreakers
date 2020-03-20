@@ -47,11 +47,8 @@ const onNewWebSocketConnection = (socket) => {
                 //emit something to the room to let everyone else know that guy left so we can updatee the waiting screeen
                 const newPlayerList = gameRooms[roomCode].playerList.filter(player => player !== players[socket.id].name);
                 gameRooms[roomCode].playerList = newPlayerList;
-                console.log(newPlayerList);
-                io.in(players[socket.id].roomCode).emit("playerJoinedGame", { players: newPlayerList});
-                console.log(gameRooms[roomCode].players)
+                io.in(players[socket.id].roomCode).emit("updatePlayerList", { players: newPlayerList});
                 delete gameRooms[roomCode].players[socket.id];
-                console.log(gameRooms[roomCode].players)
             }
         }
     });
@@ -81,7 +78,7 @@ const onNewWebSocketConnection = (socket) => {
             console.log("debug");
             console.log(gameRooms[data.gameId]);
             const players = gameRooms[data.gameId].playerList;
-            io.in(data.gameId).emit("playerJoinedGame", { players: players});
+            io.in(data.gameId).emit("updatePlayerList", { players: players});
         } else {
             console.log("bad id");
             socket.emit("badGameId", {message: "game id does not exist"});

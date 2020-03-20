@@ -11,7 +11,7 @@ const IO = {
     bindEvents: () => {
         socket.on("newGameCreated", IO.onNewGameCreated);
         socket.on("badGameId", IO.onBadGameId);
-        socket.on("playerJoinedGame", IO.onPlayerJoinedGame)
+        socket.on("updatePlayerList", IO.onUpdatePlayerList)
     },
 
     onNewGameCreated: (data) => {
@@ -24,7 +24,7 @@ const IO = {
         window.alert(data.message);
     },
 
-    onPlayerJoinedGame: (data) => {
+    onUpdatePlayerList: (data) => {
         console.log(data);
         App.displayWaitingRoom();
         App.updatePlayers(data.players);
