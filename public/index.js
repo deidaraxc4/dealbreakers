@@ -64,6 +64,7 @@ const App = {
         App.doc.on('click', '#btnJoinGame', App.joinGame);
         App.doc.on('click', '#btnBackIntro', App.showInitScreen);
         App.doc.on('click', '#btnJoinRoom', App.joinGameRoom);
+        App.doc.on('click', '#btnReady', App.readyPlayer);
     },
 
     gameInit: (data) => {
@@ -115,6 +116,11 @@ const App = {
             return;
         }
         window.alert("Room codes are 5 digits long, can you count?");
+    },
+
+    readyPlayer: () => {
+        console.log("You clicked ready "+socket.id)
+        socket.emit("readyPlayer", {username: App.username, gameId: App.gameId});
     },
 
     displayWaitingRoom: () => {

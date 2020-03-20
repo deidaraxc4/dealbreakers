@@ -84,11 +84,20 @@ const onNewWebSocketConnection = (socket) => {
             socket.emit("badGameId", {message: "game id does not exist"});
         }
     };
+
+    const readyPlayer = (data) => {
+        console.log(data)
+        gameRooms[data.gameId].players[socket.id].ready = true;
+        console.log(gameRooms[data.gameId].players)
+        // emit back event to show all clients the player ready
+        // check if we have at least 3 players in room and all players in room are ready then emit event to begin game
+    };
     
     // listen for client sending event
     socket.on("hello", helloMsg => console.info(`Socket ${socket.id} says: ${helloMsg}`));
     socket.on("createNewGame", createNewGame);
-    socket.on("joinGame", joinGame)
+    socket.on("joinGame", joinGame);
+    socket.on("readyPlayer", readyPlayer);
 };
 
 io.sockets.on('connection', onNewWebSocketConnection);
