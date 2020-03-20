@@ -11,7 +11,8 @@ const IO = {
     bindEvents: () => {
         socket.on("newGameCreated", IO.onNewGameCreated);
         socket.on("badGameId", IO.onBadGameId);
-        socket.on("updatePlayerList", IO.onUpdatePlayerList)
+        socket.on("updatePlayerList", IO.onUpdatePlayerList);
+        socket.on("readyPlayerStatus", IO.onReadyPlayerStatus);
     },
 
     onNewGameCreated: (data) => {
@@ -28,6 +29,11 @@ const IO = {
         console.log(data);
         App.displayWaitingRoom();
         App.updatePlayers(data.players);
+    },
+
+    onReadyPlayerStatus: (data) => {
+        console.log(data);
+        App.updateReadyStatus(data.player);
     },
 };
 
@@ -138,7 +144,14 @@ const App = {
         players.map((player) => {
             $("#players").append('<p class="font-weight-bold">'+player+'</p>')
         });
-    }
+    },
+
+    updateReadyStatus: (player) => {
+        //TODO this is a bug if someone leaves then all the ready players will look like they arent ready anymore but they are in thee
+        // backend, seems like a complicated fix for a ui issue
+        //$('#players:contains('+player+')').addClass('badge badge-primary');
+        $('p:contains('+player+')').addClass('badge badge-primary');
+    },
 };
 
 const main = () => {
