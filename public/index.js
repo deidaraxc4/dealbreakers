@@ -64,7 +64,7 @@ const App = {
     },
 
     showInitScreen: () => {
-        App.gameArea.html(App.templateSingleScreen);
+        App.gameArea.html(App.templateIntroScreen);
     },
 
     bindEvents: () => {

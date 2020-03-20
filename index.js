@@ -11,11 +11,18 @@ app.use(express.static(`${__dirname}/public`));
 
 server.listen(port, () => console.log(`listening on port ${port}`));
 
+const perks = ["rich", "handsome", "has big house", "is doctor", "is celebrity", "is tall", "is cool", "is nice", "is alive"];
+const dealbreakers = ["ugly", "bad breath", "smelly", "cant read", "is dumb", "will cheat"];
+
 class GameRoom {
     constructor(roomCode) {
         this.roomCode = roomCode;
         this.players = {};//Player object
         this.playerList = [];
+        this.whiteDeck = new CardDeck([...perks]);
+        this.redDeck = new CardDeck([...dealbreakers]);
+        this.currentSingleSocketId = null;
+        this.stage = "Waiting on players to add perks...";
     }
 
     unreadyAllPlayers() {
@@ -36,6 +43,49 @@ class GameRoom {
             }
         }
         return true;
+    }
+
+    setSinglePlayer() {
+        const socketIds = Object.keys(this.players);
+        console.log(socketIds);
+        // check current single and get its index, set single to the next person or if end of array set back to the first
+        if(this.currentSingleSocketId) {
+            const currentSingleIndex =socketIds.indexOf(this.currentSingleSocketId)
+            if(currentSingleIndex + 1 >= socketIds.length) {
+                this.currentSingleSocketId = socketIds[0];
+            } else {
+                this.currentSingleSocketId = socketIds[currentSingleIndex + 1];
+            }
+        } else {
+            this.currentSingleSocketId = socketIds[0];
+        }
+    }
+}
+
+class CardDeck {
+    constructor(cards) {
+        this.cards = this.shuffle(cards);
+        this.discard = [];
+    }
+
+    shuffle(cards) {
+        let shuffledCards = [];
+
+        for(let i = 0 ; i < cards.length; i++) {
+            let randomIndex = Math.floor(Math.random() * cards.length);
+            shuffledCards.push(cards.splice(randomIndex, 1)[0]);
+        }
+
+        return shuffledCards;
+    }
+
+    reShuffle() {
+        this.cards.concat(this.discard);
+        this.cards = this.shuffle(this.cards);
+    }
+
+    get count() {
+        return this.cards.length;
     }
 }
 
@@ -119,7 +169,9 @@ const onNewWebSocketConnection = (socket) => {
         io.in(data.gameId).emit("readyPlayerStatus", { player: data.username});
         // check if we have at least 3 players in room and all players in room are ready then emit event to begin game
         if(gameRooms[data.gameId].playerList.length >= 3 && gameRooms[data.gameId].allPlayersReady()) {
-            console.log("more than or equal 3 players are in room and all are ready")
+            console.log("more than or equal 3 players are in room and all are ready");
+            gameRooms[data.gameId].setSinglePlayer();
+            // send event to socketid with io.to() to tell them they are single
         }
     };
     
