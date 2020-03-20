@@ -13,6 +13,7 @@ app.use(express.static(`${__dirname}/public`));
 server.listen(port, () => console.log(`listening on port ${port}`));
 
 const perks = ["rich", "handsome", "has big house", "is doctor", "is celebrity", "is tall", "is cool", "is nice", "is alive"];
+//const perks = ["rich", "handsome", "badass"];
 const dealbreakers = ["ugly", "bad breath", "smelly", "cant read", "is dumb", "will cheat"];
 
 class GameRoom {
@@ -61,6 +62,19 @@ class GameRoom {
             this.currentSingleSocketId = socketIds[0];
         }
     }
+
+    // deal everyone cards until they have 4 white cards, 2 red cards
+    giveEveryoneCards() {
+        for(let [key, value] of Object.entries(this.players)) {
+            const currentAmountWhiteCards = value.whiteCards.length;
+            const currentAmountRedCards = value.redCards.length;
+            console.log(currentAmountRedCards, currentAmountWhiteCards);
+            const amountWhiteToDeal = 4 - currentAmountWhiteCards;
+            const amountRedToDeal = 2 - currentAmountRedCards;
+            value.whiteCards = value.whiteCards.concat(this.whiteDeck.dealCards(amountWhiteToDeal));
+            value.redCards = value.redCards.concat(this.redDeck.dealCards(amountRedToDeal));
+        }
+    }
 }
 
 class CardDeck {
@@ -78,8 +92,23 @@ class CardDeck {
     }
 
     reShuffle() {
-        this.cards.concat(this.discard);
-        this.cards = this.shuffle(this.cards);
+        const x = this.shuffle(this.discard);
+        this.cards = this.cards.concat(x)
+    }
+
+    dealCards(amount) {
+        const hand = [];
+        for(let i = 0; i < amount; i++) {
+            // check this.cards array is not empty if it is then reshuffle the discard array and empty into the new deck
+            if(this.cards.length == 0) {
+                this.reShuffle();
+                this.discard = [];
+            }
+            const card = this.cards.pop();
+            hand.push(card);
+            this.discard.push(card);
+        }
+        return hand;
     }
 
     get count() {
@@ -169,8 +198,10 @@ const onNewWebSocketConnection = (socket) => {
         if(gameRooms[data.gameId].playerList.length >= 3 && gameRooms[data.gameId].allPlayersReady()) {
             console.log("more than or equal 3 players are in room and all are ready");
             gameRooms[data.gameId].setSinglePlayer();
-            console.log(gameRooms[data.gameId])
-            // send event to socketid with io.to() to tell them they are single
+            console.log(gameRooms[data.gameId]);
+            // deal 4 perks 2 dealbreakers to everyone
+            gameRooms[data.gameId].giveEveryoneCards();
+            // send event to socketid with io.to() to tell them they are single and another event to auctioners
         }
     };
     
@@ -183,6 +214,18 @@ const onNewWebSocketConnection = (socket) => {
 
 io.sockets.on('connection', onNewWebSocketConnection);
 
-// console.log("testing deck")
-// const x = new GameRoom("123");
-// console.log(x)
+console.log("testing deck")
+const x = new GameRoom("123");
+x.players["socketid"] = new Player("bob", "socketid", "123");
+x.players["socketid2"] = new Player("joe", "socketid2", "123");
+x.players["socketid3"] = new Player("juan", "socketid3", "123");
+console.log(x)
+x.giveEveryoneCards();
+x.giveEveryoneCards();
+x.giveEveryoneCards();
+// const cards = x.whiteDeck.dealCards(10);
+// console.log(cards);
+console.log("line210")
+console.log(x.players);
+console.log("line224")
+console.log(x)
