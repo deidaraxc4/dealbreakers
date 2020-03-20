@@ -1,4 +1,5 @@
 const express = require('express');
+const _ = require('lodash');
 const port = process.env.PORT || 3000;
 
 const app = express();
@@ -70,11 +71,8 @@ class CardDeck {
 
     shuffle(cards) {
         let shuffledCards = [];
-
-        for(let i = 0 ; i < cards.length; i++) {
-            let randomIndex = Math.floor(Math.random() * cards.length);
-            shuffledCards.push(cards.splice(randomIndex, 1)[0]);
-        }
+        
+        shuffledCards = _.shuffle(cards)
 
         return shuffledCards;
     }
@@ -171,6 +169,7 @@ const onNewWebSocketConnection = (socket) => {
         if(gameRooms[data.gameId].playerList.length >= 3 && gameRooms[data.gameId].allPlayersReady()) {
             console.log("more than or equal 3 players are in room and all are ready");
             gameRooms[data.gameId].setSinglePlayer();
+            console.log(gameRooms[data.gameId])
             // send event to socketid with io.to() to tell them they are single
         }
     };
@@ -183,3 +182,7 @@ const onNewWebSocketConnection = (socket) => {
 };
 
 io.sockets.on('connection', onNewWebSocketConnection);
+
+console.log("testing deck")
+const x = new GameRoom("123");
+console.log(x)
