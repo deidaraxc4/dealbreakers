@@ -59,10 +59,12 @@ const App = {
         App.templateIntroScreen = $('#intro-screen-template').html();
         App.templateWaitingScreen = $('#waiting-screen-template').html();
         App.templateJoinScreen = $('#join-screen-template').html();
+        App.templateSingleScreen = $('#single-player-game-screen-template').html();
+        App.templateAuctionScreen = $('#auction-player-game-screen-template').html();
     },
 
     showInitScreen: () => {
-        App.gameArea.html(App.templateIntroScreen);
+        App.gameArea.html(App.templateSingleScreen);
     },
 
     bindEvents: () => {

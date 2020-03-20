@@ -45,6 +45,7 @@ class Player {
         this.id = id;
         this.roomCode = roomCode;
         this.ready = false;
+        this.points = 0;
         this.whiteCards = [];
         this.redCards = [];
     }
