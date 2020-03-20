@@ -71,7 +71,7 @@ class CardDeck {
 
     shuffle(cards) {
         let shuffledCards = [];
-        
+
         shuffledCards = _.shuffle(cards)
 
         return shuffledCards;
@@ -183,6 +183,6 @@ const onNewWebSocketConnection = (socket) => {
 
 io.sockets.on('connection', onNewWebSocketConnection);
 
-console.log("testing deck")
-const x = new GameRoom("123");
-console.log(x)
+// console.log("testing deck")
+// const x = new GameRoom("123");
+// console.log(x)

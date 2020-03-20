@@ -64,7 +64,7 @@ const App = {
     },
 
     showInitScreen: () => {
-        App.gameArea.html(App.templateIntroScreen);
+        App.gameArea.html(App.templateAuctionScreen);
     },
 
     bindEvents: () => {
