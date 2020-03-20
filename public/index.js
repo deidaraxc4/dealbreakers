@@ -147,10 +147,7 @@ const App = {
     },
 
     updateReadyStatus: (player) => {
-        //TODO this is a bug if someone leaves then all the ready players will look like they arent ready anymore but they are in thee
-        // backend, seems like a complicated fix for a ui issue
-        //$('#players:contains('+player+')').addClass('badge badge-primary');
-        $('p:contains('+player+')').addClass('badge badge-primary');
+        $('p:contains('+player+')').html(player+" &#9829").css('color', 'red');
     },
 };
 

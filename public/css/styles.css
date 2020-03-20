@@ -20,3 +20,25 @@ html, body {
     padding: 10px 0;
     border-radius: 10px;
 }
+
+.ready {
+    background-color: red;
+    height: 30px;
+    transform: rotate(-45deg);
+    width: 30px;
+}
+
+.ready:before,
+.ready:after {
+  content: "";
+  background-color: red;
+  border-radius: 50%;
+  height: 30px;
+  position: absolute;
+  width: 30px;
+}
+
+.ready:before {
+    top: -15px;
+    left: 0;
+}
