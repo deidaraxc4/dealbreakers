@@ -55,6 +55,7 @@ const IO = {
         App.phase = data.phase;
         App.pickAmount = data.pickAmount;
         App.displayAuctionRoom();
+        App.updateAuctionRoomTitle("Time to build that perfect date");
         App.updateAuctionRoomGamePhase(data.instructions);
         App.auctionRoomRenderWhiteCards(data.whiteCards);
     },
@@ -72,6 +73,17 @@ const IO = {
 
     onRedCardPhase: (data) => {
         console.log(data);
+        const competingCards = [];
+        competingCards.push(data.competingDatePerk1);
+        competingCards.push(data.competingDatePerk2);
+
+        App.phase = data.phase;
+        App.pickAmount = data.pickAmount;
+        App.displayAuctionRoom();
+        App.updateAuctionRoomTitle("Time to sabotage " + data.competingUser + "'s date");
+        App.updateAuctionRoomGamePhase(data.instructions);
+        App.auctionRoomRenderCompetingCards(competingCards, data.competingUser);
+        App.auctionRoomRenderRedCards(data.redCards);
     },
 };
 
@@ -141,7 +153,6 @@ const App = {
             console.log("you clicked create game");
             // need to emit some socket event so the backend can create a random gameId and join the gameId with socket.join
             socket.emit('createNewGame', { username: username });
-            // App.displayWaitingRoom();
             return;
         }
         window.alert("You forgot your name");
@@ -208,8 +219,26 @@ const App = {
         $("#auctionState").text(phase);
     },
 
+    updateAuctionRoomTitle: (title) => {
+        $("#auction-title").text(title);
+    },
+
     updatePostSubmissionMessage: (message) => {
         $("#post-submission-message").text(message);
+    },
+
+    auctionRoomRenderCompetingCards: (competingCards, competingUser) => {
+        competingCards.map((competingCard) => {
+            console.log(competingCard);
+            $("#competing-date").append(
+                '<div class="card text-white bg-dark mb-3" style="max-width: 18rem;">' +
+                    '<div class="card-body">' +
+                        '<h5 class="card-title">'+ competingUser +"'s date" +'</h5>' +
+                        '<p class="card-text">'+ competingCard +'</p>' +
+                    '</div>' +
+                '</div>'
+            );
+        });
     },
 
     auctionRoomRenderWhiteCards: (whiteCards) => {
@@ -303,6 +332,7 @@ const App = {
                 window.alert("can you not read? it says pick " + App.pickAmount + " cards");
             } else {
                 // emit event back to server
+                socket.emit("redCardSubmission", {gameId: App.gameId, username: App.username, redCards: App.selectedRed});
             }
         }
     },

@@ -109,7 +109,8 @@ class GameRoom {
                 const username = this.players[key].name;
                 const userCardsToGet = submissionMapping.get(username);
                 const submission = this.submissions[userCardsToGet];
-                io.to(key).emit("redCardPhase", {redCards: this.players[key].redCards, competingDatePerk1: submission.perk1, competingDatePerk2: submission.perk2, competingUser: userCardsToGet });
+                io.to(key).emit("redCardPhase", {redCards: this.players[key].redCards, competingDatePerk1: submission.perk1, competingDatePerk2: submission.perk2, 
+                    competingUser: userCardsToGet, instructions: "Pick 1 dealbreaker", phase: "red", pickAmount: 1 });
             }
         }
     }
