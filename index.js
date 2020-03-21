@@ -26,6 +26,7 @@ class GameRoom {
         this.currentSingleSocketId = null;
         this.stage = "Waiting on players to add perks...";
         this.submissions = {};//socket id key to Date object value
+        //this.submissionMapping = new Map(); //socket id key to username value, socket id will get the next index's username
     }
 
     unreadyAllPlayers() {
@@ -91,6 +92,47 @@ class GameRoom {
                 io.to(key).emit("designatedAuctioner", {whiteCards: this.players[key].whiteCards, redCards: this.players[key].redCards, phase: "white", pickAmount: 2, instructions: "Pick 2 perks"});
             }
         }
+    }
+
+    // emit event to single to alert phase change and alert auctioners event to pick red cards
+    redCardRound() {
+        this.stage = "Waiting on players  to add dealbreakers...";
+        io.to(gameRooms[this.roomCode].whoIsSingle()).emit("singleUpdateState", {stage: this.stage});
+        // need logic to pass the person to the left whitecards to next auctioner
+        const submissionMapping = this.getSubmissionMapping();
+        // now we know who gets who cards
+
+
+        for(let key of Object.keys(this.players)) {
+            if(key !== this.currentSingleSocketId) {
+                // get the username
+                const username = this.players[key].name;
+                const userCardsToGet = submissionMapping.get(username);
+                const submission = this.submissions[userCardsToGet];
+                io.to(key).emit("redCardPhase", {redCards: this.players[key].redCards, competingDatePerk1: submission.perk1, competingDatePerk2: submission.perk2, competingUser: userCardsToGet });
+            }
+        }
+    }
+
+    getSubmissionMapping() {
+        //TODO this wont work if we have duplicate names so we need validation there when people try joining
+        // determine the single and start one index over it
+        const submissionMapping = new Map();
+        const singleUsername = this.players[this.currentSingleSocketId].name;
+        console.log("line 113 "+singleUsername);
+        let playerListMinusSingle = [...this.playerList];
+        playerListMinusSingle = playerListMinusSingle.filter(e => e!== singleUsername);
+        for(let i = 0; i < playerListMinusSingle.length; i++) {
+            let key = playerListMinusSingle[i];
+            let value;
+            if(i+1 === playerListMinusSingle.length) {
+                value = playerListMinusSingle[0]; 
+            } else {
+                value = playerListMinusSingle[i+1];
+            }
+            submissionMapping.set(key, value);
+        }
+        return submissionMapping;
     }
 }
 
@@ -238,12 +280,32 @@ const onNewWebSocketConnection = (socket) => {
             // send event to socketid with io.to() to tell them they are single and another event to auctioners
         }
     };
+
+    const whiteCardSubmission = (data) => {
+        console.log(data);
+        gameRooms[data.gameId].submissions[data.username] = new Date(data.whiteCards[0], data.whiteCards[1], '');
+        console.log(gameRooms[data.gameId]);
+        // emit event back to socket so that they know they are waiting on other submissions
+        socket.emit("postWhiteCardSubmission", {message: "Waiting on others to finalize their dates"});
+        // remove the white cards from their hand
+        gameRooms[data.gameId].players[socket.id].discardCards(data.whiteCards, []);
+        // check that we have a submission from everyone minus the single, if we do then emit event back to auctioners for red card phase
+        const numNeededSubmisisons = gameRooms[data.gameId].playerList.length - 1;
+        if(Object.keys(gameRooms[data.gameId].submissions).length == numNeededSubmisisons) {
+            // emit event to single to let them know phase change
+            gameRooms[data.gameId].redCardRound();
+            // gameRooms[data.gameId].stage = "Waiting on players  to add dealbreakers...";
+            // io.to(gameRooms[data.gameId].whoIsSingle()).emit("singleUpdateState", {stage: gameRooms[data.gameId].stage});
+
+        }
+    };
     
     // listen for client sending event
     socket.on("hello", helloMsg => console.info(`Socket ${socket.id} says: ${helloMsg}`));
     socket.on("createNewGame", createNewGame);
     socket.on("joinGame", joinGame);
     socket.on("readyPlayer", readyPlayer);
+    socket.on("whiteCardSubmission", whiteCardSubmission);
 };
 
 io.sockets.on('connection', onNewWebSocketConnection);

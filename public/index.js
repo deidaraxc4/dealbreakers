@@ -15,6 +15,9 @@ const IO = {
         socket.on("readyPlayerStatus", IO.onReadyPlayerStatus);
         socket.on("designatedSingle", IO.onDesignatedSingle);
         socket.on("designatedAuctioner", IO.onDesignatedAuctioner);
+        socket.on("postWhiteCardSubmission", IO.onPostWhiteCardSubmission);
+        socket.on("singleUpdateState", IO.onSingleUpdateState);
+        socket.on("redCardPhase", IO. onRedCardPhase);
     },
 
     onNewGameCreated: (data) => {
@@ -54,7 +57,21 @@ const IO = {
         App.displayAuctionRoom();
         App.updateAuctionRoomGamePhase(data.instructions);
         App.auctionRoomRenderWhiteCards(data.whiteCards);
-        //App.auctionRoomRenderRedCards(data.redCards);
+    },
+
+    onPostWhiteCardSubmission: (data) => {
+        console.log(data);
+        App.displayPostSubmissionRoom();
+        App.updatePostSubmissionMessage(data.message);
+    },
+
+    onSingleUpdateState: (data) => {
+        console.log(data);
+        App.updateSingleRoomGamePhase(data.stage);
+    },
+
+    onRedCardPhase: (data) => {
+        console.log(data);
     },
 };
 
@@ -86,6 +103,7 @@ const App = {
         App.templateJoinScreen = $('#join-screen-template').html();
         App.templateSingleScreen = $('#single-player-game-screen-template').html();
         App.templateAuctionScreen = $('#auction-player-game-screen-template').html();
+        App.templatePostSubmissionScreen = $('#post-submission-screen-template').html();
     },
 
     showInitScreen: () => {
@@ -178,12 +196,20 @@ const App = {
         App.gameArea.html(App.templateAuctionScreen);
     },
 
+    displayPostSubmissionRoom: () => {
+        App.gameArea.html(App.templatePostSubmissionScreen);
+    },
+
     updateSingleRoomGamePhase: (phase) => {
         $("#gamePhase").text(phase);
     },
 
     updateAuctionRoomGamePhase: (phase) => {
         $("#auctionState").text(phase);
+    },
+
+    updatePostSubmissionMessage: (message) => {
+        $("#post-submission-message").text(message);
     },
 
     auctionRoomRenderWhiteCards: (whiteCards) => {
@@ -239,9 +265,11 @@ const App = {
         if(App.selectedWhite.includes(selected)) {
             App.selectedWhite = App.selectedWhite.filter(e => e !== selected);
             $(event.target).parent().parent().find(".card-body").removeClass("text-success");
+            $(event.target).text("Select");
         } else {
             App.selectedWhite.push(selected);
             $(event.target).parent().parent().find(".card-body").addClass("text-success");
+            $(event.target).text("Unselect");
         }
         console.log(App.selectedWhite)
     },
@@ -252,9 +280,11 @@ const App = {
         if(App.selectedRed.includes(selected)) {
             App.selectedRed = App.selectedRed.filter(e => e !== selected);
             $(event.target).parent().parent().find(".card-body").removeClass("text-dark");
+            $(event.target).text("Select");
         } else {
             App.selectedRed.push(selected);
             $(event.target).parent().parent().find(".card-body").addClass("text-dark");
+            $(event.target).text("Unselect");
         }
         console.log(App.selectedRed)
     },
@@ -266,6 +296,7 @@ const App = {
                 window.alert("can you not read? it says pick " + App.pickAmount + " cards");
             } else {
                 // emit event back to server
+                socket.emit("whiteCardSubmission", {gameId: App.gameId, username: App.username, whiteCards: App.selectedWhite});
             }
         } else if(App.phase === "red") {
             if(App.selectedRed.length !== App.pickAmount) {
