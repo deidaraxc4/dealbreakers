@@ -12,7 +12,7 @@ app.use(express.static(`${__dirname}/public`));
 
 server.listen(port, () => console.log(`listening on port ${port}`));
 
-const perks = ["rich", "handsome", "has big house", "is doctor", "is celebrity", "is tall", "is cool", "is nice", "is alive"];
+const perks = ["rich", "handsome", "has big house", "is doctor", "is celebrity", "is tall", "is cool", "is nice", "is alive", "has car", "is funny"];
 //const perks = ["rich", "handsome", "badass"];
 const dealbreakers = ["ugly", "bad breath", "smelly", "cant read", "is dumb", "will cheat"];
 
@@ -25,6 +25,7 @@ class GameRoom {
         this.redDeck = new CardDeck([...dealbreakers]);
         this.currentSingleSocketId = null;
         this.stage = "Waiting on players to add perks...";
+        this.submissions = {};//socket id key to Date object value
     }
 
     unreadyAllPlayers() {
@@ -87,7 +88,7 @@ class GameRoom {
         io.to(gameRooms[this.roomCode].whoIsSingle()).emit("designatedSingle", {stage: gameRooms[this.roomCode].stage});
         for(let key of Object.keys(this.players)) {
             if(key !== this.currentSingleSocketId) {
-                io.to(key).emit("designatedAuctioner", {whiteCards: this.players[key].whiteCards, redCards: this.players[key].redCards});
+                io.to(key).emit("designatedAuctioner", {whiteCards: this.players[key].whiteCards, redCards: this.players[key].redCards, phase: "white", pickAmount: 2, instructions: "Pick 2 perks"});
             }
         }
     }
@@ -146,6 +147,14 @@ class Player {
     discardCards(whiteCards, redCards) {
         this.whiteCards = this.whiteCards.filter(e => !whiteCards.includes(e));
         this.redCards = this.redCards.filter(e => !redCards.includes(e));
+    }
+}
+
+class Date {
+    constructor(perk1, perk2, dealbreaker) {
+        this.perk1 = perk1,
+        this.perk2 = perk2,
+        this.dealbreaker = dealbreaker;
     }
 }
 

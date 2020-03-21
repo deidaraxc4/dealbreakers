@@ -72,11 +72,11 @@
     <script id="single-player-game-screen-template" type="text/template">
         <div class="container-sm">
             <h1 class="text-center">You are the single this round</h1>
-            <p class="lead gamePhase">Waiting on players to add perks...</p>
+            <p id="gamePhase" class="lead text-center">Phase here</p>
 
             <div id="choices">
 
-                <div class="card-deck">
+                <!-- <div class="card-deck">
                     <div>
                         <h1>Date 1</h1>
                         <button type="button" class="btn btn-primary">This is the way</button>
@@ -124,7 +124,7 @@
                           <p class="card-text">A dealbreaker would go here.</p>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
             </div>
         </div>
@@ -136,47 +136,62 @@
             <h1 class="text-center">Time to build that perfect date</h1>
             <p class="lead text-center" id="auctionState">Pick 2 perks</p>
 
-            <div class="card-deck white-cards text-center row justify-content-center">
-                <div class="card bg-light mb-3 text-red" style="max-width: 18rem;">
-                    <div class="card-body">
-                      <h5 class="card-title">Perk</h5>
-                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    </div>
-                    <div class="card-footer">
-                        <button type="button" class="btn btn-outline-primary">Select</button>
-                    </div>
-                  </div>
-                  <div class="card bg-light mb-3 text-red" style="max-width: 18rem;">
-                    <div class="card-body">
-                      <h5 class="card-title">Perk</h5>
-                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    </div>
-                    <div class="card-footer">
-                        <button type="button" class="btn btn-outline-primary">Select</button>
-                    </div>
-                  </div>
-                  <div class="card bg-light mb-3 text-red" style="max-width: 18rem;">
-                    <div class="card-body">
-                      <h5 class="card-title">Perk</h5>
-                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    </div>
-                    <div class="card-footer">
-                        <button type="button" class="btn btn-outline-primary">Select</button>
-                    </div>
-                  </div>
-                  <div class="card bg-light mb-3 text-red" style="max-width: 18rem;">
-                    <div class="card-body">
-                      <h5 class="card-title">Perk</h5>
-                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    </div>
-                    <div class="card-footer">
-                        <button type="button" class="btn btn-outline-primary">Select</button>
-                    </div>
-                  </div>
+            <div id="competing-date" class="card-deck white-cards text-center row justify-content-center">
+              <!-- <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
+                <div class="card-body">
+                  <h5 class="card-title">Simons Date</h5>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+              </div>
+              <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
+                <div class="card-body">
+                  <h5 class="card-title">Simons Date</h5>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+              </div> -->
             </div>
 
-            <div class="card-deck red-cards text-center row justify-content-center">
-                  <div class="card text-white bg-danger mb-3 text-white" style="max-width: 18rem;">
+            <div id="perks-area" class="card-deck white-cards text-center row justify-content-center">
+                <!-- <div class="card bg-light mb-3 text-red" style="max-width: 18rem;">
+                    <div class="card-body">
+                      <h5 class="card-title">Perk</h5>
+                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    </div>
+                    <div class="card-footer">
+                        <button type="button" class="btn btn-outline-primary">Select</button>
+                    </div>
+                  </div>
+                  <div class="card bg-light mb-3 text-red" style="max-width: 18rem;">
+                    <div class="card-body">
+                      <h5 class="card-title">Perk</h5>
+                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    </div>
+                    <div class="card-footer">
+                        <button type="button" class="btn btn-outline-primary">Select</button>
+                    </div>
+                  </div>
+                  <div class="card bg-light mb-3 text-red" style="max-width: 18rem;">
+                    <div class="card-body">
+                      <h5 class="card-title">Perk</h5>
+                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    </div>
+                    <div class="card-footer">
+                        <button type="button" class="btn btn-outline-primary">Select</button>
+                    </div>
+                  </div>
+                  <div class="card bg-light mb-3 text-red" style="max-width: 18rem;">
+                    <div class="card-body">
+                      <h5 class="card-title">Perk</h5>
+                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    </div>
+                    <div class="card-footer">
+                        <button type="button" class="btn btn-outline-primary">Select</button>
+                    </div>
+                  </div> -->
+            </div>
+
+            <div id="dealbreakers-area" class="card-deck red-cards text-center row justify-content-center">
+                  <!-- <div class="card text-white bg-danger mb-3 text-white" style="max-width: 18rem;">
                     <div class="card-body">
                       <h5 class="card-title">Dealbreaker</h5>
                       <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
@@ -193,7 +208,7 @@
                     <div class="card-footer">
                         <button type="button" class="btn btn-outline-light">Select</button>
                     </div>
-                  </div>
+                  </div> -->
             </div>
             
             <button id="selectTraits" type="button" class="btn btn-primary btn-lg btn-block">Submit</button>

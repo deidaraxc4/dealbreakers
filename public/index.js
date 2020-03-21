@@ -40,10 +40,19 @@ const IO = {
 
     onDesignatedSingle: (data) => {
         console.log(data);
+        // change screen and display waiting status
+        App.displaySingleRoom();
+        App.updateSingleRoomGamePhase(data.stage);
     },
 
     onDesignatedAuctioner: (data) => {
         console.log(data);
+        //todo backend also send out whether its white phase or red phase so we render the buttons to select for it and how many to select too
+        // change screen and display data as cards with jquery
+        App.displayAuctionRoom();
+        App.updateAuctionRoomGamePhase(data.instructions);
+        App.auctionRoomRenderWhiteCards(data.whiteCards);
+        App.auctionRoomRenderRedCards(data.redCards);
     },
 };
 
@@ -55,6 +64,8 @@ const App = {
     currentRound: 0,
     numPlayersInRoom: 0,
     username: '',
+    phase: '', //white or red which will determine which cards to render buttons for
+    pickAmount: 0, //how many cards to select we will do client side validiation for this
 
     init: () => {
         App.cacheElements();
@@ -148,6 +159,56 @@ const App = {
 
     displayJoinRoom: () => {
         App.gameArea.html(App.templateJoinScreen);
+    },
+
+    displaySingleRoom: () => {
+        App.gameArea.html(App.templateSingleScreen);
+    },
+
+    displayAuctionRoom: () => {
+        App.gameArea.html(App.templateAuctionScreen);
+    },
+
+    updateSingleRoomGamePhase: (phase) => {
+        $("#gamePhase").text(phase);
+    },
+
+    updateAuctionRoomGamePhase: (phase) => {
+        $("#auctionState").text(phase);
+    },
+
+    auctionRoomRenderWhiteCards: (whiteCards) => {
+        whiteCards.map((whiteCard) => {
+            console.log(whiteCard);
+            $("#perks-area").append(
+                '<div class="card bg-light mb-3 text-red" style="max-width: 18rem;">' +
+                    '<div class="card-body">' +
+                        '<h5 class="card-title">Perk</h5>' +
+                        '<p class="card-text">'+ whiteCard +'</p>' +
+                    '</div>' +
+                    '<div class="card-footer">' +
+                        '<button type="button" class="btn btn-outline-primary">Select</button>' +
+                    '</div>' +
+                '</div>'
+            );
+        });
+    },
+
+    auctionRoomRenderRedCards: (redCards) => {
+        redCards.map((redCard) => {
+            console.log(redCard);
+            $("#dealbreakers-area").append(
+                '<div class="card text-white bg-danger mb-3 text-white" style="max-width: 18rem;">' +
+                    '<div class="card-body">' +
+                        '<h5 class="card-title">Dealbreaker</h5>' +
+                        '<p class="card-text">'+ redCard +'</p>' +
+                    '</div>' +
+                    '<div class="card-footer">' +
+                        '<button type="button" class="btn btn-outline-light">Select</button>' +
+                    '</div>' +
+                '</div>'
+            );
+        });
     },
 
     updatePlayers: (players) => {
