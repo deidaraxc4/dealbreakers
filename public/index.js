@@ -49,10 +49,12 @@ const IO = {
         console.log(data);
         //todo backend also send out whether its white phase or red phase so we render the buttons to select for it and how many to select too
         // change screen and display data as cards with jquery
+        App.phase = data.phase;
+        App.pickAmount = data.pickAmount;
         App.displayAuctionRoom();
         App.updateAuctionRoomGamePhase(data.instructions);
         App.auctionRoomRenderWhiteCards(data.whiteCards);
-        App.auctionRoomRenderRedCards(data.redCards);
+        //App.auctionRoomRenderRedCards(data.redCards);
     },
 };
 
@@ -65,7 +67,7 @@ const App = {
     numPlayersInRoom: 0,
     username: '',
     phase: '', //white or red which will determine which cards to render buttons for
-    pickedAmount: 0, //how many cards selected
+    pickAmount: 0,
     selectedWhite: [],
     selectedRed: [],
 
@@ -259,6 +261,19 @@ const App = {
 
     onSubmit: () => {
         // check what phase and how many should be selected and verify against selectedWhite/selectedRed
+        if(App.phase === "white") {
+            if(App.selectedWhite.length !== App.pickAmount) {
+                window.alert("can you not read? it says pick " + App.pickAmount + " cards");
+            } else {
+                // emit event back to server
+            }
+        } else if(App.phase === "red") {
+            if(App.selectedRed.length !== App.pickAmount) {
+                window.alert("can you not read? it says pick " + App.pickAmount + " cards");
+            } else {
+                // emit event back to server
+            }
+        }
     },
 };
 
