@@ -65,7 +65,9 @@ const App = {
     numPlayersInRoom: 0,
     username: '',
     phase: '', //white or red which will determine which cards to render buttons for
-    pickAmount: 0, //how many cards to select we will do client side validiation for this
+    pickedAmount: 0, //how many cards selected
+    selectedWhite: [],
+    selectedRed: [],
 
     init: () => {
         App.cacheElements();
@@ -94,6 +96,11 @@ const App = {
         App.doc.on('click', '#btnBackIntro', App.showInitScreen);
         App.doc.on('click', '#btnJoinRoom', App.joinGameRoom);
         App.doc.on('click', '#btnReady', App.readyPlayer);
+        App.doc.on('click', '#selectTraits', App.onSubmit);
+        
+        // card events
+        App.doc.on('click', '#redCardSelect', App.redCardSelect);
+        App.doc.on('click', '#whiteCardSelect', App.whiteCardSelect);
     },
 
     gameInit: (data) => {
@@ -187,7 +194,7 @@ const App = {
                         '<p class="card-text">'+ whiteCard +'</p>' +
                     '</div>' +
                     '<div class="card-footer">' +
-                        '<button type="button" class="btn btn-outline-primary">Select</button>' +
+                        '<button id="whiteCardSelect" type="button" class="btn btn-outline-primary">Select</button>' +
                     '</div>' +
                 '</div>'
             );
@@ -204,7 +211,7 @@ const App = {
                         '<p class="card-text">'+ redCard +'</p>' +
                     '</div>' +
                     '<div class="card-footer">' +
-                        '<button type="button" class="btn btn-outline-light">Select</button>' +
+                        '<button id="redCardSelect" type="button" class="btn btn-outline-light">Select</button>' +
                     '</div>' +
                 '</div>'
             );
@@ -221,6 +228,37 @@ const App = {
 
     updateReadyStatus: (player) => {
         $('p:contains('+player+')').html(player+" &#9829").css('color', 'red');
+    },
+
+    whiteCardSelect: (event) => {
+        console.log($(event.target).parent().parent().find(".card-text").text());
+        // check if selected value is already in selected list if it is then remove it from the list and change css accordingly
+        const selected = $(event.target).parent().parent().find(".card-text").text();
+        if(App.selectedWhite.includes(selected)) {
+            App.selectedWhite = App.selectedWhite.filter(e => e !== selected);
+            $(event.target).parent().parent().find(".card-body").removeClass("text-success");
+        } else {
+            App.selectedWhite.push(selected);
+            $(event.target).parent().parent().find(".card-body").addClass("text-success");
+        }
+        console.log(App.selectedWhite)
+    },
+
+    redCardSelect: (event) => {
+        console.log($(event.target).parent().parent().find(".card-text").text());
+        const selected = $(event.target).parent().parent().find(".card-text").text();
+        if(App.selectedRed.includes(selected)) {
+            App.selectedRed = App.selectedRed.filter(e => e !== selected);
+            $(event.target).parent().parent().find(".card-body").removeClass("text-dark");
+        } else {
+            App.selectedRed.push(selected);
+            $(event.target).parent().parent().find(".card-body").addClass("text-dark");
+        }
+        console.log(App.selectedRed)
+    },
+
+    onSubmit: () => {
+        // check what phase and how many should be selected and verify against selectedWhite/selectedRed
     },
 };
 
