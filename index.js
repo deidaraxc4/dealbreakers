@@ -126,6 +126,11 @@ class Player {
         this.whiteCards = [];
         this.redCards = [];
     }
+
+    discardCards(whiteCards, redCards) {
+        this.whiteCards = this.whiteCards.filter(e => !whiteCards.includes(e));
+        this.redCards = this.redCards.filter(e => !redCards.includes(e));
+    }
 }
 
 const gameRooms = {};
@@ -214,18 +219,21 @@ const onNewWebSocketConnection = (socket) => {
 
 io.sockets.on('connection', onNewWebSocketConnection);
 
-console.log("testing deck")
-const x = new GameRoom("123");
-x.players["socketid"] = new Player("bob", "socketid", "123");
-x.players["socketid2"] = new Player("joe", "socketid2", "123");
-x.players["socketid3"] = new Player("juan", "socketid3", "123");
-console.log(x)
-x.giveEveryoneCards();
-x.giveEveryoneCards();
-x.giveEveryoneCards();
-// const cards = x.whiteDeck.dealCards(10);
-// console.log(cards);
-console.log("line210")
-console.log(x.players);
-console.log("line224")
-console.log(x)
+// console.log("testing deck")
+// const x = new GameRoom("123");
+// x.players["socketid"] = new Player("bob", "socketid", "123");
+// x.players["socketid2"] = new Player("joe", "socketid2", "123");
+// x.players["socketid3"] = new Player("juan", "socketid3", "123");
+// console.log(x)
+// x.giveEveryoneCards();
+// x.giveEveryoneCards();
+// x.giveEveryoneCards();
+// // const cards = x.whiteDeck.dealCards(10);
+// // console.log(cards);
+// console.log("line210")
+// console.log(x.players);
+// console.log("line224")
+// // console.log(x)
+// console.log("line236")
+// x.players["socketid"].discardCards(["is doctor", "handsome", "rich", "is cool", "is celebrity", "badinput"], ["bad breath", "smelly", "is dumb", "will cheat"]);
+// console.log(x.players)
