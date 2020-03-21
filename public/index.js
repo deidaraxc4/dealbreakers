@@ -13,6 +13,8 @@ const IO = {
         socket.on("badGameId", IO.onBadGameId);
         socket.on("updatePlayerList", IO.onUpdatePlayerList);
         socket.on("readyPlayerStatus", IO.onReadyPlayerStatus);
+        socket.on("designatedSingle", IO.onDesignatedSingle);
+        socket.on("designatedAuctioner", IO.onDesignatedAuctioner);
     },
 
     onNewGameCreated: (data) => {
@@ -34,6 +36,14 @@ const IO = {
     onReadyPlayerStatus: (data) => {
         console.log(data);
         App.updateReadyStatus(data.player);
+    },
+
+    onDesignatedSingle: (data) => {
+        console.log(data);
+    },
+
+    onDesignatedAuctioner: (data) => {
+        console.log(data);
     },
 };
 
@@ -64,7 +74,7 @@ const App = {
     },
 
     showInitScreen: () => {
-        App.gameArea.html(App.templateAuctionScreen);
+        App.gameArea.html(App.templateIntroScreen);
     },
 
     bindEvents: () => {

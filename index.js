@@ -49,7 +49,7 @@ class GameRoom {
 
     setSinglePlayer() {
         const socketIds = Object.keys(this.players);
-        console.log(socketIds);
+        console.log("line52"+socketIds);
         // check current single and get its index, set single to the next person or if end of array set back to the first
         if(this.currentSingleSocketId) {
             const currentSingleIndex =socketIds.indexOf(this.currentSingleSocketId)
@@ -63,16 +63,32 @@ class GameRoom {
         }
     }
 
+    whoIsSingle() {
+        return this.currentSingleSocketId;
+    }
+
     // deal everyone cards until they have 4 white cards, 2 red cards
     giveEveryoneCards() {
         for(let [key, value] of Object.entries(this.players)) {
             const currentAmountWhiteCards = value.whiteCards.length;
             const currentAmountRedCards = value.redCards.length;
-            console.log(currentAmountRedCards, currentAmountWhiteCards);
+            //console.log(currentAmountRedCards, currentAmountWhiteCards);
             const amountWhiteToDeal = 4 - currentAmountWhiteCards;
             const amountRedToDeal = 2 - currentAmountRedCards;
             value.whiteCards = value.whiteCards.concat(this.whiteDeck.dealCards(amountWhiteToDeal));
             value.redCards = value.redCards.concat(this.redDeck.dealCards(amountRedToDeal));
+        }
+    }
+
+    // start the round by emitting designatedSingle event to the socket who is single, and everyone else emit designatedAuctioner event
+    startRound() {
+        console.log("line85")
+        console.log(gameRooms[this.roomCode].players)
+        io.to(gameRooms[this.roomCode].whoIsSingle()).emit("designatedSingle", {stage: gameRooms[this.roomCode].stage});
+        for(let key of Object.keys(this.players)) {
+            if(key !== this.currentSingleSocketId) {
+                io.to(key).emit("designatedAuctioner", {whiteCards: this.players[key].whiteCards, redCards: this.players[key].redCards});
+            }
         }
     }
 }
@@ -203,9 +219,13 @@ const onNewWebSocketConnection = (socket) => {
         if(gameRooms[data.gameId].playerList.length >= 3 && gameRooms[data.gameId].allPlayersReady()) {
             console.log("more than or equal 3 players are in room and all are ready");
             gameRooms[data.gameId].setSinglePlayer();
-            console.log(gameRooms[data.gameId]);
+            //console.log(gameRooms[data.gameId]);
             // deal 4 perks 2 dealbreakers to everyone
             gameRooms[data.gameId].giveEveryoneCards();
+            console.log(gameRooms[data.gameId]);
+            gameRooms[data.gameId].startRound();
+            // io.to(gameRooms[data.gameId].whoIsSingle()).emit("designatedSingle", {stage: gameRooms[data.gameId].stage});
+
             // send event to socketid with io.to() to tell them they are single and another event to auctioners
         }
     };
