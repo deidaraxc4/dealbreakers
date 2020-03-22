@@ -269,9 +269,15 @@ const onNewWebSocketConnection = (socket) => {
                 gameRooms[roomCode].playerList = newPlayerList;
                 io.in(players[socket.id].roomCode).emit("updatePlayerList", { players: newPlayerList});
                 delete gameRooms[roomCode].players[socket.id];
-                console.log(gameRooms[roomCode])
+                // if room is completely empty now, delete it
+                if(gameRooms[roomCode].playerList.length == 0) {
+                    delete gameRooms[roomCode];
+                }
+                // console.log(gameRooms[roomCode])
             }
         }
+        console.log("line275");
+        console.log(gameRooms)
     });
 
     const createNewGame = (data,) => {
