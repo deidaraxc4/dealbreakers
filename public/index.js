@@ -121,6 +121,8 @@ const IO = {
         App.updatePostSubmissionMessage(data.chosenWinner + " is the winner");
         if(App.username === data.chosenWinner) {
             App.updatePostSubmissionStage("Look at you getting dates and stuff");
+            App.points +=1;
+            App.updateScore();
         } else {
             App.updatePostSubmissionStage("Tough luck, better go back to swiping");
         }
@@ -132,13 +134,13 @@ const App = {
 
     gameId: 0,
     mySocketId: '',
-    currentRound: 0,
     numPlayersInRoom: 0,
     username: '',
     phase: '', //white or red which will determine which cards to render buttons for
     pickAmount: 0,
     selectedWhite: [],
     selectedRed: [],
+    points: 0,
 
     init: () => {
         App.cacheElements();
@@ -243,14 +245,17 @@ const App = {
 
     displaySingleRoom: () => {
         App.gameArea.html(App.templateSingleScreen);
+        App.updateScore();
     },
 
     displayAuctionRoom: () => {
         App.gameArea.html(App.templateAuctionScreen);
+        App.updateScore();
     },
 
     displayPostSubmissionRoom: () => {
         App.gameArea.html(App.templatePostSubmissionScreen);
+        App.updateScore();
     },
 
     updateSingleRoomGamePhase: (phase) => {
@@ -271,6 +276,10 @@ const App = {
 
     updatePostSubmissionStage: (stage) => {
         $("#post-submission-stage").text(stage);
+    },
+
+    updateScore: () => {
+        $("#score").text("Amount of dates you went on: "+App.points);
     },
 
     singleRoomPromptNextRound: () => {
