@@ -21,6 +21,8 @@ const IO = {
         socket.on("postRedCardSubmission", IO.onPostRedCardSubmission);
         socket.on("displayFinalDateChoices", IO.onDisplayFinalDateChoices);
         socket.on("leftOnRead", IO.onLeftOnRead);
+        socket.on("promptToStartNextRound", IO.onPromptToStartNextRound);
+        socket.on("informWinner", IO.onInformWinner);
     },
 
     onNewGameCreated: (data) => {
@@ -97,9 +99,22 @@ const IO = {
 
     onDisplayFinalDateChoices: (data) => {
         console.log(data);
+        App.updateSingleRoomGamePhase(data.stage);
+        App.singleroomRenderDates(data.submissions);
     },
 
     onLeftOnRead: (data) => {
+        console.log(data);
+        App.displayPostSubmissionRoom();
+        App.updatePostSubmissionMessage(data.message);
+        App.updatePostSubmissionStage(data.stage);
+    },
+
+    onPromptToStartNextRound: (data) => {
+        console.log(data);
+    },
+
+    onInformWinner: (data) => {
         console.log(data);
     },
 };
@@ -146,6 +161,7 @@ const App = {
         App.doc.on('click', '#btnJoinRoom', App.joinGameRoom);
         App.doc.on('click', '#btnReady', App.readyPlayer);
         App.doc.on('click', '#selectTraits', App.onSubmit);
+        App.doc.on('click', '#dateSelect', App.onDateSelect);
         
         // card events
         App.doc.on('click', '#redCardSelect', App.redCardSelect);
@@ -242,6 +258,38 @@ const App = {
 
     updatePostSubmissionMessage: (message) => {
         $("#post-submission-message").text(message);
+    },
+
+    updatePostSubmissionStage: (stage) => {
+        $("#post-submission-stage").text(stage);
+    },
+
+    singleroomRenderDates: (submissions) => {
+        for(let [key, value] of Object.entries(submissions)) {
+            $("#choices").append(
+                '<div class="card-deck">' +
+                    '<div> <h1 id="dateSubmission">'+key+'</h1> <button id="dateSelect" type="button" class="btn btn-primary">This is the way</button> </div> <br />' +
+                    '<div class="card text-red bg-light mb-3">' +
+                        '<div class="card-header">Perks &#10084;</div>' +
+                        '<div class="card-body">' +
+                            '<p class="card-text">'+ value.perk1 +'</p>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="card text-red bg-light mb-3">' +
+                        '<div class="card-header">Perks &#10084;</div>' +
+                        '<div class="card-body">' +
+                            '<p class="card-text">'+ value.perk2 +'</p>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="card text-white bg-danger mb-3">' +
+                        '<div class="card-header">Dealbreakers &#128148;</div>' +
+                        '<div class="card-body">' +
+                            '<p class="card-text">'+ value.dealbreaker +'</p>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>'
+            );
+        }
     },
 
     auctionRoomRenderCompetingCards: (competingCards, competingUser) => {
@@ -352,6 +400,12 @@ const App = {
                 socket.emit("redCardSubmission", {gameId: App.gameId, username: App.username, redCards: App.selectedRed});
             }
         }
+    },
+
+    onDateSelect: (event) => {
+        const user = $(event.target).parent().find("#dateSubmission").text();
+        console.log(user);
+        socket.emit("dateWinnerSubmission", {gameId: App.gameId, winner: user});
     },
 };
 

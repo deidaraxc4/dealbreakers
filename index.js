@@ -121,7 +121,7 @@ class GameRoom {
         io.to(this.whoIsSingle()).emit("displayFinalDateChoices", {submissions: this.submissions});
         for(let key of Object.keys(this.players)) {
             if(key !== this.currentSingleSocketId) {
-                io.to(key).emit("leftOnRead", {message: "Stop checking if they replied to your message"});
+                io.to(key).emit("leftOnRead", {message: "Stop checking if they replied to your message", stage: "Waiting on single to choose a date"});
             }
         }
     }
@@ -154,6 +154,32 @@ class GameRoom {
             }
         }
         return true;
+    }
+
+    clearSubmissions() {
+        this.submissions = {};
+    }
+
+    endRoundAndGivePoint(winner) {
+        // give the point, TODO really need to enforce unique names
+        for(let [key, value] of Object.entries(this.players)) {
+            if(value.name === winner) {
+                value.points += 1;
+                break;
+            }
+        }
+        // emit message to single and give them ability to start next round
+        io.to(this.whoIsSingle()).emit("promptToStartNextRound", {chosenWinner: winner});
+        // emit message to everyone else informing the winner
+        for(let key of Object.keys(this.players)) {
+            if(key !== this.currentSingleSocketId) {
+                io.to(key).emit("informWinner", {chosenWinner: winner});
+            }
+        }
+        // deal out cards, clear submissions and determine next single
+        this.clearSubmissions();
+        this.giveEveryoneCards();
+        this.setSinglePlayer();
     }
 }
 
@@ -334,6 +360,11 @@ const onNewWebSocketConnection = (socket) => {
             gameRooms[data.gameId].singlePersonVotes();
         }
     };
+
+    const dateWinnerSubmission = (data) => {
+        console.log(data);
+        gameRooms[data.gameId].endRoundAndGivePoint(data.winner);
+    };
     
     // listen for client sending event
     socket.on("hello", helloMsg => console.info(`Socket ${socket.id} says: ${helloMsg}`));
@@ -342,6 +373,7 @@ const onNewWebSocketConnection = (socket) => {
     socket.on("readyPlayer", readyPlayer);
     socket.on("whiteCardSubmission", whiteCardSubmission);
     socket.on("redCardSubmission", redCardSubmission);
+    socket.on("dateWinnerSubmission", dateWinnerSubmission);
 };
 
 io.sockets.on('connection', onNewWebSocketConnection);
