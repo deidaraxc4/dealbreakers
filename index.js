@@ -177,6 +177,7 @@ class GameRoom {
             }
         }
         // deal out cards, clear submissions and determine next single
+        this.stage = "Waiting on players to add perks...";
         this.clearSubmissions();
         this.giveEveryoneCards();
         this.setSinglePlayer();
@@ -365,6 +366,10 @@ const onNewWebSocketConnection = (socket) => {
         console.log(data);
         gameRooms[data.gameId].endRoundAndGivePoint(data.winner);
     };
+
+    const startRound = (data) => {
+        gameRooms[data.gameId].startRound();
+    };
     
     // listen for client sending event
     socket.on("hello", helloMsg => console.info(`Socket ${socket.id} says: ${helloMsg}`));
@@ -374,6 +379,7 @@ const onNewWebSocketConnection = (socket) => {
     socket.on("whiteCardSubmission", whiteCardSubmission);
     socket.on("redCardSubmission", redCardSubmission);
     socket.on("dateWinnerSubmission", dateWinnerSubmission);
+    socket.on("nextRound", startRound);
 };
 
 io.sockets.on('connection', onNewWebSocketConnection);

@@ -112,10 +112,18 @@ const IO = {
 
     onPromptToStartNextRound: (data) => {
         console.log(data);
+        App.updateSingleRoomGamePhase("You chose "+data.chosenWinner +"'s date");
+        App.singleRoomPromptNextRound();
     },
 
     onInformWinner: (data) => {
         console.log(data);
+        App.updatePostSubmissionMessage(data.chosenWinner + " is the winner");
+        if(App.username === data.chosenWinner) {
+            App.updatePostSubmissionStage("Look at you getting dates and stuff");
+        } else {
+            App.updatePostSubmissionStage("Tough luck, better go back to swiping");
+        }
     },
 };
 
@@ -162,6 +170,7 @@ const App = {
         App.doc.on('click', '#btnReady', App.readyPlayer);
         App.doc.on('click', '#selectTraits', App.onSubmit);
         App.doc.on('click', '#dateSelect', App.onDateSelect);
+        App.doc.on('click', '#startNextRound', App.onStartNextRound);
         
         // card events
         App.doc.on('click', '#redCardSelect', App.redCardSelect);
@@ -262,6 +271,13 @@ const App = {
 
     updatePostSubmissionStage: (stage) => {
         $("#post-submission-stage").text(stage);
+    },
+
+    singleRoomPromptNextRound: () => {
+        $("#choices").empty();
+        $("#choices").append(
+            '<button id="startNextRound" type="button" class="btn btn-primary">Start Next Round</button>'
+        );
     },
 
     singleroomRenderDates: (submissions) => {
@@ -389,15 +405,17 @@ const App = {
             if(App.selectedWhite.length !== App.pickAmount) {
                 window.alert("can you not read? it says pick " + App.pickAmount + " cards");
             } else {
-                // emit event back to server
+                // emit event back to server and clear selected
                 socket.emit("whiteCardSubmission", {gameId: App.gameId, username: App.username, whiteCards: App.selectedWhite});
+                App.selectedWhite = [];
             }
         } else if(App.phase === "red") {
             if(App.selectedRed.length !== App.pickAmount) {
                 window.alert("can you not read? it says pick " + App.pickAmount + " cards");
             } else {
-                // emit event back to server
+                // emit event back to server and clear selected
                 socket.emit("redCardSubmission", {gameId: App.gameId, username: App.username, redCards: App.selectedRed});
+                App.selectedRed = [];
             }
         }
     },
@@ -406,6 +424,10 @@ const App = {
         const user = $(event.target).parent().find("#dateSubmission").text();
         console.log(user);
         socket.emit("dateWinnerSubmission", {gameId: App.gameId, winner: user});
+    },
+
+    onStartNextRound: () => {
+        socket.emit("nextRound", {gameId: App.gameId});
     },
 };
 
