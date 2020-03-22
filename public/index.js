@@ -376,10 +376,14 @@ const App = {
             App.selectedWhite = App.selectedWhite.filter(e => e !== selected);
             $(event.target).parent().parent().find(".card-body").removeClass("text-success");
             $(event.target).text("Select");
+            $(event.target).addClass("btn-outline-primary");
+            $(event.target).removeClass("btn-primary");
         } else {
             App.selectedWhite.push(selected);
             $(event.target).parent().parent().find(".card-body").addClass("text-success");
             $(event.target).text("Unselect");
+            $(event.target).removeClass("btn-outline-primary");
+            $(event.target).addClass("btn-primary");
         }
         console.log(App.selectedWhite)
     },
@@ -391,10 +395,14 @@ const App = {
             App.selectedRed = App.selectedRed.filter(e => e !== selected);
             $(event.target).parent().parent().find(".card-body").removeClass("text-dark");
             $(event.target).text("Select");
+            $(event.target).addClass("btn-outline-primary");
+            $(event.target).removeClass("btn-primary");
         } else {
             App.selectedRed.push(selected);
             $(event.target).parent().parent().find(".card-body").addClass("text-dark");
             $(event.target).text("Unselect");
+            $(event.target).removeClass("btn-outline-primary");
+            $(event.target).addClass("btn-primary");
         }
         console.log(App.selectedRed)
     },
