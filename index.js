@@ -30,11 +30,7 @@ class GameRoom {
 
     unreadyAllPlayers() {
         for(let [key, value] of Object.entries(this.players)) {
-            console.log("LINE 23")
-            console.log(key)
-            console.log(value)
             value.ready = false;
-            console.log(value)
         }
     }
 
@@ -50,7 +46,6 @@ class GameRoom {
 
     setSinglePlayer() {
         const socketIds = Object.keys(this.players);
-        console.log("line52"+socketIds);
         // check current single and get its index, set single to the next person or if end of array set back to the first
         if(this.currentSingleSocketId) {
             const currentSingleIndex =socketIds.indexOf(this.currentSingleSocketId)
@@ -73,7 +68,6 @@ class GameRoom {
         for(let [key, value] of Object.entries(this.players)) {
             const currentAmountWhiteCards = value.whiteCards.length;
             const currentAmountRedCards = value.redCards.length;
-            //console.log(currentAmountRedCards, currentAmountWhiteCards);
             const amountWhiteToDeal = 4 - currentAmountWhiteCards;
             const amountRedToDeal = 2 - currentAmountRedCards;
             value.whiteCards = value.whiteCards.concat(this.whiteDeck.dealCards(amountWhiteToDeal));
@@ -83,8 +77,6 @@ class GameRoom {
 
     // start the round by emitting designatedSingle event to the socket who is single, and everyone else emit designatedAuctioner event
     startRound() {
-        console.log("line85")
-        console.log(gameRooms[this.roomCode].players)
         io.to(gameRooms[this.roomCode].whoIsSingle()).emit("designatedSingle", {stage: gameRooms[this.roomCode].stage});
         for(let key of Object.keys(this.players)) {
             if(key !== this.currentSingleSocketId) {
@@ -130,7 +122,6 @@ class GameRoom {
         // determine the single and start one index over it
         const submissionMapping = new Map();
         const singleUsername = this.players[this.currentSingleSocketId].name;
-        console.log("line 113 "+singleUsername);
         let playerListMinusSingle = [...this.playerList];
         playerListMinusSingle = playerListMinusSingle.filter(e => e!== singleUsername);
         for(let i = 0; i < playerListMinusSingle.length; i++) {
@@ -256,10 +247,7 @@ const onNewWebSocketConnection = (socket) => {
         console.info(`Socket ${socket.id} has disconnected.`);
         //TODO need to have socket leave the room and do something
         for(const roomCode in gameRooms) {
-            console.log(roomCode);
             const players = gameRooms[roomCode].players;
-            console.log(players)
-            console.log(players[socket.id])
             if(players[socket.id]) {
                 //unready all players in the room
                 gameRooms[roomCode].unreadyAllPlayers();
@@ -272,72 +260,53 @@ const onNewWebSocketConnection = (socket) => {
                 if(gameRooms[roomCode].playerList.length == 0) {
                     delete gameRooms[roomCode];
                 }
-                // console.log(gameRooms[roomCode])
             }
         }
-        console.log("line275");
-        console.log(gameRooms)
     });
 
     const createNewGame = (data,) => {
         const gameId = Math.floor(10000 + Math.random() * 90000);
-        console.log(gameId);
-        console.log(data);
         socket.emit("newGameCreated", {gameId: gameId, mySocketId: socket.id, username: data.username});
         socket.join(gameId.toString());
         gameRooms[gameId] = new GameRoom(gameId);
         gameRooms[gameId].players[socket.id] = new Player(data.username, socket.id, gameId);
         gameRooms[gameId].playerList.push(data.username);
-        //gameRooms[gameId].players.push(data.username);
-        console.log(io.sockets.adapter.rooms);
     };
 
     const joinGame = (data) => {
-        console.log(data)
+        //console.log(data)
         // check if gameId is good
         if(data.gameId in gameRooms) {
             socket.join(data.gameId);
-            console.log(io.sockets.adapter.rooms);
             gameRooms[data.gameId].players[socket.id] = new Player(data.username, socket.id, data.gameId);
             gameRooms[data.gameId].playerList.push(data.username);
             //gameRooms[data.gameId].players.push(data.username);
             //unready all players
             gameRooms[data.gameId].unreadyAllPlayers();
-            console.log("debug");
-            console.log(gameRooms[data.gameId]);
             const players = gameRooms[data.gameId].playerList;
             io.in(data.gameId).emit("updatePlayerList", { players: players});
         } else {
-            console.log("bad id");
             socket.emit("badGameId", {message: "game id does not exist"});
         }
     };
 
     const readyPlayer = (data) => {
-        console.log(data)
+        //console.log(data)
         gameRooms[data.gameId].players[socket.id].ready = true;
-        console.log(gameRooms[data.gameId].players)
         // emit back event to show all clients the player ready
         io.in(data.gameId).emit("readyPlayerStatus", { player: data.username});
         // check if we have at least 3 players in room and all players in room are ready then emit event to begin game
         if(gameRooms[data.gameId].playerList.length >= 3 && gameRooms[data.gameId].allPlayersReady()) {
-            console.log("more than or equal 3 players are in room and all are ready");
             gameRooms[data.gameId].setSinglePlayer();
-            //console.log(gameRooms[data.gameId]);
             // deal 4 perks 2 dealbreakers to everyone
             gameRooms[data.gameId].giveEveryoneCards();
-            console.log(gameRooms[data.gameId]);
             gameRooms[data.gameId].startRound();
-            // io.to(gameRooms[data.gameId].whoIsSingle()).emit("designatedSingle", {stage: gameRooms[data.gameId].stage});
-
-            // send event to socketid with io.to() to tell them they are single and another event to auctioners
         }
     };
 
     const whiteCardSubmission = (data) => {
-        console.log(data);
+        //console.log(data);
         gameRooms[data.gameId].submissions[data.username] = new Date(data.whiteCards[0], data.whiteCards[1], null);
-        console.log(gameRooms[data.gameId]);
         // emit event back to socket so that they know they are waiting on other submissions
         socket.emit("postWhiteCardSubmission", {message: "Waiting on others to finalize their dates"});
         // remove the white cards from their hand
@@ -347,16 +316,12 @@ const onNewWebSocketConnection = (socket) => {
         if(Object.keys(gameRooms[data.gameId].submissions).length == numNeededSubmisisons) {
             // emit event to single to let them know phase change
             gameRooms[data.gameId].redCardRound();
-            // gameRooms[data.gameId].stage = "Waiting on players  to add dealbreakers...";
-            // io.to(gameRooms[data.gameId].whoIsSingle()).emit("singleUpdateState", {stage: gameRooms[data.gameId].stage});
-
         }
     };
 
     const redCardSubmission = (data) => {
-        console.log(data);
+        //console.log(data);
         gameRooms[data.gameId].submissions[data.username].dealbreaker = data.redCards[0];
-        console.log(gameRooms[data.gameId]);
         // emit event back to socket so they know they are waiting on others
         socket.emit("postRedCardSubmission", {message: "Waiting on others to sabotage each others' dates"});
         // remove the red card from their hand
@@ -368,7 +333,6 @@ const onNewWebSocketConnection = (socket) => {
     };
 
     const dateWinnerSubmission = (data) => {
-        console.log(data);
         gameRooms[data.gameId].endRoundAndGivePoint(data.winner);
     };
 
