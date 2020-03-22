@@ -1,5 +1,4 @@
 const socket = io();
-socket.on("connect", () => socket.emit("hello", `hello I am here`));
 
 // namespace for code relating to socket.io
 const IO = {
@@ -449,12 +448,8 @@ const App = {
 };
 
 const main = () => {
-    console.log("jquery");
-
-    // initialize
     IO.init();
     App.init();
-
 };
 
 main();
