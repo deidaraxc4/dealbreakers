@@ -1,3 +1,4 @@
+const { redCards, whiteCards } = require('./cards');
 const express = require('express');
 const _ = require('lodash');
 const port = process.env.PORT || 3000;
@@ -13,16 +14,13 @@ app.use(favicon(__dirname + '/public/images/favicon.ico'));
 
 server.listen(port, () => console.log(`listening on port ${port}`));
 
-const perks = ["rich", "handsome", "has big house", "is doctor", "is celebrity", "is tall", "is cool", "is nice", "is alive", "has car", "is funny"];
-const dealbreakers = ["ugly", "bad breath", "smelly", "cant read", "is dumb", "will cheat"];
-
 class GameRoom {
     constructor(roomCode) {
         this.roomCode = roomCode;
         this.players = {};//Player object
         this.playerList = [];
-        this.whiteDeck = new CardDeck([...perks]);
-        this.redDeck = new CardDeck([...dealbreakers]);
+        this.whiteDeck = new CardDeck([...whiteCards]);
+        this.redDeck = new CardDeck([...redCards]);
         this.currentSingleSocketId = null;
         this.stage = "Waiting on players to add perks...";
         this.submissions = {};//socket id key to Date object value
