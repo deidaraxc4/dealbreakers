@@ -61,13 +61,13 @@ class GameRoom {
         return this.currentSingleSocketId;
     }
 
-    // deal everyone cards until they have 4 white cards, 2 red cards
+    // deal everyone cards until they have 4 white cards, 3 red cards
     giveEveryoneCards() {
         for(let [key, value] of Object.entries(this.players)) {
             const currentAmountWhiteCards = value.whiteCards.length;
             const currentAmountRedCards = value.redCards.length;
             const amountWhiteToDeal = 4 - currentAmountWhiteCards;
-            const amountRedToDeal = 2 - currentAmountRedCards;
+            const amountRedToDeal = 3 - currentAmountRedCards;
             value.whiteCards = value.whiteCards.concat(this.whiteDeck.dealCards(amountWhiteToDeal));
             value.redCards = value.redCards.concat(this.redDeck.dealCards(amountRedToDeal));
         }
