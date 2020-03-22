@@ -230,6 +230,7 @@ const App = {
     displayWaitingRoom: () => {
         App.gameArea.html(App.templateWaitingScreen);
         $("#roomCode").text(App.gameId);
+        $("#gameUrl").text("Go to "+window.location.href);
     },
 
     displayJoinRoom: () => {
