@@ -1,7 +1,7 @@
 const express = require('express');
 const _ = require('lodash');
 const port = process.env.PORT || 3000;
-
+const favicon = require('serve-favicon');
 const app = express();
 
 const server = require('http').createServer(app);
@@ -9,6 +9,7 @@ const server = require('http').createServer(app);
 const io = require('socket.io')(server)
 
 app.use(express.static(`${__dirname}/public`));
+app.use(favicon(__dirname + '/public/images/favicon.ico'));
 
 server.listen(port, () => console.log(`listening on port ${port}`));
 
