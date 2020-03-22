@@ -115,6 +115,17 @@ class GameRoom {
         }
     }
 
+    singlePersonVotes() {
+        this.stage = "Choose who you would date";
+        io.to(this.whoIsSingle()).emit("singleUpdateState", {stage: this.stage});
+        io.to(this.whoIsSingle()).emit("displayFinalDateChoices", {submissions: this.submissions});
+        for(let key of Object.keys(this.players)) {
+            if(key !== this.currentSingleSocketId) {
+                io.to(key).emit("leftOnRead", {message: "Stop checking if they replied to your message"});
+            }
+        }
+    }
+
     getSubmissionMapping() {
         //TODO this wont work if we have duplicate names so we need validation there when people try joining
         // determine the single and start one index over it
@@ -134,6 +145,15 @@ class GameRoom {
             submissionMapping.set(key, value);
         }
         return submissionMapping;
+    }
+
+    areAllRedCardsSubmitted() {
+        for(let [key, value] of Object.entries(this.submissions)) {
+            if(!value.dealbreaker) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 
@@ -284,7 +304,7 @@ const onNewWebSocketConnection = (socket) => {
 
     const whiteCardSubmission = (data) => {
         console.log(data);
-        gameRooms[data.gameId].submissions[data.username] = new Date(data.whiteCards[0], data.whiteCards[1], '');
+        gameRooms[data.gameId].submissions[data.username] = new Date(data.whiteCards[0], data.whiteCards[1], null);
         console.log(gameRooms[data.gameId]);
         // emit event back to socket so that they know they are waiting on other submissions
         socket.emit("postWhiteCardSubmission", {message: "Waiting on others to finalize their dates"});
@@ -300,6 +320,20 @@ const onNewWebSocketConnection = (socket) => {
 
         }
     };
+
+    const redCardSubmission = (data) => {
+        console.log(data);
+        gameRooms[data.gameId].submissions[data.username].dealbreaker = data.redCards[0];
+        console.log(gameRooms[data.gameId]);
+        // emit event back to socket so they know they are waiting on others
+        socket.emit("postRedCardSubmission", {message: "Waiting on others to sabotage each others' dates"});
+        // remove the red card from their hand
+        gameRooms[data.gameId].players[socket.id].discardCards([], data.redCards);
+        // check that we have all submissions from everyone minus the single
+        if(gameRooms[data.gameId].areAllRedCardsSubmitted()) {
+            gameRooms[data.gameId].singlePersonVotes();
+        }
+    };
     
     // listen for client sending event
     socket.on("hello", helloMsg => console.info(`Socket ${socket.id} says: ${helloMsg}`));
@@ -307,6 +341,7 @@ const onNewWebSocketConnection = (socket) => {
     socket.on("joinGame", joinGame);
     socket.on("readyPlayer", readyPlayer);
     socket.on("whiteCardSubmission", whiteCardSubmission);
+    socket.on("redCardSubmission", redCardSubmission);
 };
 
 io.sockets.on('connection', onNewWebSocketConnection);

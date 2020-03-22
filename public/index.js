@@ -18,6 +18,9 @@ const IO = {
         socket.on("postWhiteCardSubmission", IO.onPostWhiteCardSubmission);
         socket.on("singleUpdateState", IO.onSingleUpdateState);
         socket.on("redCardPhase", IO. onRedCardPhase);
+        socket.on("postRedCardSubmission", IO.onPostRedCardSubmission);
+        socket.on("displayFinalDateChoices", IO.onDisplayFinalDateChoices);
+        socket.on("leftOnRead", IO.onLeftOnRead);
     },
 
     onNewGameCreated: (data) => {
@@ -66,6 +69,12 @@ const IO = {
         App.updatePostSubmissionMessage(data.message);
     },
 
+    onPostRedCardSubmission: (data) => {
+        console.log(data);
+        App.displayPostSubmissionRoom();
+        App.updatePostSubmissionMessage(data.message);
+    },
+
     onSingleUpdateState: (data) => {
         console.log(data);
         App.updateSingleRoomGamePhase(data.stage);
@@ -84,6 +93,14 @@ const IO = {
         App.updateAuctionRoomGamePhase(data.instructions);
         App.auctionRoomRenderCompetingCards(competingCards, data.competingUser);
         App.auctionRoomRenderRedCards(data.redCards);
+    },
+
+    onDisplayFinalDateChoices: (data) => {
+        console.log(data);
+    },
+
+    onLeftOnRead: (data) => {
+        console.log(data);
     },
 };
 
