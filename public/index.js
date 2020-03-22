@@ -25,35 +25,35 @@ const IO = {
     },
 
     onNewGameCreated: (data) => {
-        console.log(data);
+        //console.log(data);
         App.gameInit(data);
     },
 
     onBadGameId: (data) => {
-        console.log(data);
+        //console.log(data);
         window.alert(data.message);
     },
 
     onUpdatePlayerList: (data) => {
-        console.log(data);
+        //console.log(data);
         App.displayWaitingRoom();
         App.updatePlayers(data.players);
     },
 
     onReadyPlayerStatus: (data) => {
-        console.log(data);
+        //console.log(data);
         App.updateReadyStatus(data.player);
     },
 
     onDesignatedSingle: (data) => {
-        console.log(data);
+        //console.log(data);
         // change screen and display waiting status
         App.displaySingleRoom();
         App.updateSingleRoomGamePhase(data.stage);
     },
 
     onDesignatedAuctioner: (data) => {
-        console.log(data);
+        //console.log(data);
         //todo backend also send out whether its white phase or red phase so we render the buttons to select for it and how many to select too
         // change screen and display data as cards with jquery
         App.phase = data.phase;
@@ -65,24 +65,24 @@ const IO = {
     },
 
     onPostWhiteCardSubmission: (data) => {
-        console.log(data);
+        //console.log(data);
         App.displayPostSubmissionRoom();
         App.updatePostSubmissionMessage(data.message);
     },
 
     onPostRedCardSubmission: (data) => {
-        console.log(data);
+        //console.log(data);
         App.displayPostSubmissionRoom();
         App.updatePostSubmissionMessage(data.message);
     },
 
     onSingleUpdateState: (data) => {
-        console.log(data);
+        //console.log(data);
         App.updateSingleRoomGamePhase(data.stage);
     },
 
     onRedCardPhase: (data) => {
-        console.log(data);
+        //console.log(data);
         const competingCards = [];
         competingCards.push(data.competingDatePerk1);
         competingCards.push(data.competingDatePerk2);
@@ -97,26 +97,26 @@ const IO = {
     },
 
     onDisplayFinalDateChoices: (data) => {
-        console.log(data);
+        //console.log(data);
         App.updateSingleRoomGamePhase(data.stage);
         App.singleroomRenderDates(data.submissions);
     },
 
     onLeftOnRead: (data) => {
-        console.log(data);
+        //console.log(data);
         App.displayPostSubmissionRoom();
         App.updatePostSubmissionMessage(data.message);
         App.updatePostSubmissionStage(data.stage);
     },
 
     onPromptToStartNextRound: (data) => {
-        console.log(data);
+        //console.log(data);
         App.updateSingleRoomGamePhase("You chose "+data.chosenWinner +"'s date");
         App.singleRoomPromptNextRound();
     },
 
     onInformWinner: (data) => {
-        console.log(data);
+        //console.log(data);
         App.updatePostSubmissionMessage(data.chosenWinner + " is the winner");
         if(App.username === data.chosenWinner) {
             App.updatePostSubmissionStage("Look at you getting dates and stuff");
@@ -191,9 +191,7 @@ const App = {
     createGame: () => {
         const username = $('#usernameInput').val();
         App.username = username;
-        console.log(username);
         if(username) {
-            console.log("you clicked create game");
             // need to emit some socket event so the backend can create a random gameId and join the gameId with socket.join
             socket.emit('createNewGame', { username: username });
             return;
@@ -205,9 +203,7 @@ const App = {
     joinGame: () => {
         const username = $('#usernameInput').val();
         App.username = username;
-        console.log(username);
         if(username) {
-            console.log("you clicked join game");
             App.displayJoinRoom();
             return;
         }
@@ -218,7 +214,6 @@ const App = {
     joinGameRoom: () => {
         const roomCode = $('#roomCodeInput').val();
         if(roomCode.length >= 5) {
-            console.log("You joined room "+ roomCode);
             App.gameId = roomCode;
             socket.emit('joinGame', {gameId: roomCode, username: App.username});
             // emit some socket event so the backend can add user to game room and check room is valid
@@ -229,7 +224,6 @@ const App = {
     },
 
     readyPlayer: () => {
-        console.log("You clicked ready "+socket.id)
         socket.emit("readyPlayer", {username: App.username, gameId: App.gameId});
     },
 
@@ -318,7 +312,6 @@ const App = {
 
     auctionRoomRenderCompetingCards: (competingCards, competingUser) => {
         competingCards.map((competingCard) => {
-            console.log(competingCard);
             $("#competing-date").append(
                 '<div class="card text-white bg-dark mb-3" style="max-width: 18rem;">' +
                     '<div class="card-body">' +
@@ -332,7 +325,6 @@ const App = {
 
     auctionRoomRenderWhiteCards: (whiteCards) => {
         whiteCards.map((whiteCard) => {
-            console.log(whiteCard);
             $("#perks-area").append(
                 '<div class="card bg-light mb-3 text-red" style="max-width: 18rem;">' +
                     '<div class="card-body">' +
@@ -349,7 +341,6 @@ const App = {
 
     auctionRoomRenderRedCards: (redCards) => {
         redCards.map((redCard) => {
-            console.log(redCard);
             $("#dealbreakers-area").append(
                 '<div class="card text-white bg-danger mb-3 text-white" style="max-width: 18rem;">' +
                     '<div class="card-body">' +
@@ -377,7 +368,6 @@ const App = {
     },
 
     whiteCardSelect: (event) => {
-        console.log($(event.target).parent().parent().find(".card-text").text());
         // check if selected value is already in selected list if it is then remove it from the list and change css accordingly
         const selected = $(event.target).parent().parent().find(".card-text").text();
         if(App.selectedWhite.includes(selected)) {
@@ -393,11 +383,9 @@ const App = {
             $(event.target).removeClass("btn-outline-primary");
             $(event.target).addClass("btn-primary");
         }
-        console.log(App.selectedWhite)
     },
 
     redCardSelect: (event) => {
-        console.log($(event.target).parent().parent().find(".card-text").text());
         const selected = $(event.target).parent().parent().find(".card-text").text();
         if(App.selectedRed.includes(selected)) {
             App.selectedRed = App.selectedRed.filter(e => e !== selected);
@@ -412,7 +400,6 @@ const App = {
             $(event.target).removeClass("btn-outline-primary");
             $(event.target).addClass("btn-primary");
         }
-        console.log(App.selectedRed)
     },
 
     onSubmit: () => {
@@ -438,7 +425,6 @@ const App = {
 
     onDateSelect: (event) => {
         const user = $(event.target).parent().find("#dateSubmission").text();
-        console.log(user);
         socket.emit("dateWinnerSubmission", {gameId: App.gameId, winner: user});
     },
 
