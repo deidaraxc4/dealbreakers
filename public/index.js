@@ -59,7 +59,7 @@ const IO = {
         App.phase = data.phase;
         App.pickAmount = data.pickAmount;
         App.displayAuctionRoom();
-        App.updateAuctionRoomTitle("Time to build that perfect date");
+        App.updateAuctionRoomTitle("Time to build that perfect date for "+data.singlePlayer);
         App.updateAuctionRoomGamePhase(data.instructions);
         App.auctionRoomRenderWhiteCards(data.whiteCards);
     },

@@ -78,7 +78,8 @@ class GameRoom {
         io.to(gameRooms[this.roomCode].whoIsSingle()).emit("designatedSingle", {stage: gameRooms[this.roomCode].stage});
         for(let key of Object.keys(this.players)) {
             if(key !== this.currentSingleSocketId) {
-                io.to(key).emit("designatedAuctioner", {whiteCards: this.players[key].whiteCards, redCards: this.players[key].redCards, phase: "white", pickAmount: 2, instructions: "Pick 2 perks"});
+                io.to(key).emit("designatedAuctioner", {whiteCards: this.players[key].whiteCards, redCards: this.players[key].redCards, 
+                    phase: "white", pickAmount: 2, instructions: "Pick 2 perks", singlePlayer: this.players[this.currentSingleSocketId].name });
             }
         }
     }
