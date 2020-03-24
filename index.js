@@ -111,7 +111,7 @@ class GameRoom {
         io.to(this.whoIsSingle()).emit("displayFinalDateChoices", {submissions: this.submissions});
         for(let key of Object.keys(this.players)) {
             if(key !== this.currentSingleSocketId) {
-                io.to(key).emit("leftOnRead", {message: "Stop checking if they replied to your message", stage: "Waiting on single to choose a date"});
+                io.to(key).emit("leftOnRead", {message: "Stop checking if they replied to your message", stage: "Waiting on single to choose a date", submissions: this.submissions});
             }
         }
     }

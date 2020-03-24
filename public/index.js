@@ -107,6 +107,7 @@ const IO = {
         App.displayPostSubmissionRoom();
         App.updatePostSubmissionMessage(data.message);
         App.updatePostSubmissionStage(data.stage);
+        App.auctionRoomRenderAllDates(data.submissions);
     },
 
     onPromptToStartNextRound: (data) => {
@@ -306,6 +307,35 @@ const App = {
                             '<p class="card-text">'+ value.dealbreaker +'</p>' +
                         '</div>' +
                     '</div>' +
+                '</div>'
+            );
+        }
+    },
+
+    auctionRoomRenderAllDates: (submissions) => {
+        for(let [key, value] of Object.entries(submissions)) {
+            $("#all-dates").append(
+                '<div class="card-group">' +
+                    '<div class="card text-white bg-dark mb-3">' +
+                        '<div class="card-body">' +
+                            '<p class="card-text">'+ key+"'s date" +'</p>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="card text-red bg-light mb-3">' +
+                        '<div class="card-body">' +
+                            '<p class="card-text">'+ value.perk1 +'</p>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="card text-red bg-light mb-3">' +
+                        '<div class="card-body">' +
+                            '<p class="card-text">'+ value.perk1 +'</p>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="card text-white bg-danger mb-3">' +
+                            '<div class="card-body">' +
+                                '<p class="card-text">'+ value.dealbreaker +'</p>' +
+                            '</div>' +
+                        '</div>' +
                 '</div>'
             );
         }
