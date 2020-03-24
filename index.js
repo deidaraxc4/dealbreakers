@@ -162,7 +162,7 @@ class GameRoom {
         // emit message to everyone else informing the winner
         for(let key of Object.keys(this.players)) {
             if(key !== this.currentSingleSocketId) {
-                io.to(key).emit("informWinner", {chosenWinner: winner});
+                io.to(key).emit("informWinner", {chosenWinner: winner, submissions: this.submissions});
             }
         }
         // deal out cards, clear submissions and determine next single

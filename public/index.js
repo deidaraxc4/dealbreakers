@@ -107,7 +107,7 @@ const IO = {
         App.displayPostSubmissionRoom();
         App.updatePostSubmissionMessage(data.message);
         App.updatePostSubmissionStage(data.stage);
-        App.auctionRoomRenderAllDates(data.submissions);
+        App.postSubmissionRoomRenderAllDates(data.submissions);
     },
 
     onPromptToStartNextRound: (data) => {
@@ -123,8 +123,10 @@ const IO = {
             App.updatePostSubmissionStage("Look at you getting dates and stuff");
             App.points +=1;
             App.updateScore();
+            App.postSubmissionRoomRenderWinningDate(data.submissions, data.chosenWinner);
         } else {
             App.updatePostSubmissionStage("Tough luck, better go back to swiping");
+            App.postSubmissionRoomRenderWinningDate(data.submissions, data.chosenWinner);
         }
     },
 };
@@ -312,7 +314,7 @@ const App = {
         }
     },
 
-    auctionRoomRenderAllDates: (submissions) => {
+    postSubmissionRoomRenderAllDates: (submissions) => {
         for(let [key, value] of Object.entries(submissions)) {
             $("#all-dates").append(
                 '<div class="card-group">' +
@@ -338,6 +340,38 @@ const App = {
                         '</div>' +
                 '</div>'
             );
+        }
+    },
+
+    postSubmissionRoomRenderWinningDate: (submissions, winner) => {
+        $("#all-dates").empty();
+        for(let [key, value] of Object.entries(submissions)) {
+            if(key === winner) {
+                $("#all-dates").append(
+                    '<div class="card-group">' +
+                        '<div class="card text-white bg-dark mb-3">' +
+                            '<div class="card-body">' +
+                                '<p class="card-text">'+ key+"'s date" +'</p>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="card text-red bg-light mb-3">' +
+                            '<div class="card-body">' +
+                                '<p class="card-text">'+ value.perk1 +'</p>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="card text-red bg-light mb-3">' +
+                            '<div class="card-body">' +
+                                '<p class="card-text">'+ value.perk1 +'</p>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="card text-white bg-danger mb-3">' +
+                                '<div class="card-body">' +
+                                    '<p class="card-text">'+ value.dealbreaker +'</p>' +
+                                '</div>' +
+                            '</div>' +
+                    '</div>'
+                );
+            }
         }
     },
 
