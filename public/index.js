@@ -361,7 +361,7 @@ const App = {
                         '</div>' +
                         '<div class="card text-red bg-light mb-3">' +
                             '<div class="card-body">' +
-                                '<p class="card-text">'+ value.perk1 +'</p>' +
+                                '<p class="card-text">'+ value.perk2 +'</p>' +
                             '</div>' +
                         '</div>' +
                         '<div class="card text-white bg-danger mb-3">' +
