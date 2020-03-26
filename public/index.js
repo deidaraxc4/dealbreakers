@@ -10,6 +10,7 @@ const IO = {
     bindEvents: () => {
         socket.on("newGameCreated", IO.onNewGameCreated);
         socket.on("badGameId", IO.onBadGameId);
+        socket.on("badUsername", IO.onBadUserName);
         socket.on("updatePlayerList", IO.onUpdatePlayerList);
         socket.on("readyPlayerStatus", IO.onReadyPlayerStatus);
         socket.on("designatedSingle", IO.onDesignatedSingle);
@@ -31,6 +32,10 @@ const IO = {
 
     onBadGameId: (data) => {
         //console.log(data);
+        window.alert(data.message);
+    },
+
+    onBadUserName: (data) => {
         window.alert(data.message);
     },
 

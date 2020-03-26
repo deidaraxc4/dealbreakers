@@ -276,10 +276,14 @@ const onNewWebSocketConnection = (socket) => {
         //console.log(data)
         // check if gameId is good
         if(data.gameId in gameRooms) {
+            // check the username is unique
+            if(gameRooms[data.gameId].playerList.includes(data.username)) {
+                socket.emit("badUsername", {message: "That username is already taken"});
+                return;
+            }
             socket.join(data.gameId);
             gameRooms[data.gameId].players[socket.id] = new Player(data.username, socket.id, data.gameId);
             gameRooms[data.gameId].playerList.push(data.username);
-            //gameRooms[data.gameId].players.push(data.username);
             //unready all players
             gameRooms[data.gameId].unreadyAllPlayers();
             const players = gameRooms[data.gameId].playerList;
