@@ -320,7 +320,7 @@ const onNewWebSocketConnection = (socket) => {
 
     const redCardSubmission = (data) => {
         //console.log(data);
-        gameRooms[data.gameId].submissions[data.username].dealbreaker = data.redCards[0];
+        gameRooms[data.gameId].submissions[data.sabotageUser].dealbreaker = data.redCards[0];
         // emit event back to socket so they know they are waiting on others
         socket.emit("postRedCardSubmission", {message: "Waiting on others to sabotage each others' dates"});
         // remove the red card from their hand

@@ -88,6 +88,7 @@ const IO = {
         competingCards.push(data.competingDatePerk2);
 
         App.phase = data.phase;
+        App.sabotageUser = data.competingUser;
         App.pickAmount = data.pickAmount;
         App.displayAuctionRoom();
         App.updateAuctionRoomTitle("Time to sabotage " + data.competingUser + "'s date");
@@ -143,6 +144,7 @@ const App = {
     selectedWhite: [],
     selectedRed: [],
     points: 0,
+    sabotageUser: null,
 
     init: () => {
         App.cacheElements();
@@ -482,7 +484,7 @@ const App = {
                 window.alert("can you not read? it says pick " + App.pickAmount + " cards");
             } else {
                 // emit event back to server and clear selected
-                socket.emit("redCardSubmission", {gameId: App.gameId, username: App.username, redCards: App.selectedRed});
+                socket.emit("redCardSubmission", {gameId: App.gameId, username: App.username, redCards: App.selectedRed, sabotageUser: App.sabotageUser});
                 App.selectedRed = [];
             }
         }
