@@ -19,7 +19,12 @@ const whiteCards = [
     "Emotionally available always", "Model", "Very affectionate", "Voice of an angel", "Radio show host", "Great back massages", "Humble",
     "Has a twin that is down for threesomes", "Never an awkward moment", "Remembers the small things", "You're their first",
     "Good at origami", "Master swordsman", "Can fix any tech problem", "Sends funny memes", "Great with children", "Will take a bullet for you",
-    "Excellent memory"
+    "Excellent memory", "Loves to travel", "Can talk to animals", "Worships you as a god", "You vibe well with eachother", "Comedian",
+    "Fashion trend setter", "Has same favorite food as you", "Can rodeo", "Skydiving certified", "Pokmeon trainer", "Is the mayor of your city",
+    "Eats ass", "Can talk to the dead", "Will keep you warm when you're cold", "Will give you the best haircuts", "Dentist", "Master swordsman",
+    "Ninja", "Beautiful eyes", "Kisses taste like honey", "Instructor at 1Million dance studio", "Holds 3 world records", "Makes the sickest edm beats",
+    "Asian baby girl or Asian bible girl, your choice", "Is walking wifi hotspot", "Always down for sex", "Owns a esports team", "Ski instructor",
+    "Park ranger", "College professor", "Screenwriter for Marvel movies"
 ];
 
 const redCards = [
@@ -47,7 +52,11 @@ const redCards = [
     "Speaks only in sarcasm", "Dead", "Never showers/baths", "Toxic", "Chain smokes 10 packs a day", "Hitler reincarnated", "Bites during oral",
     "Shits during anal", "Obese", "Maturity of 5 year old", "Forgets your name constantly", "Shows no physicaly affection",
     "Imaginary", "Hands are always ice cold", "Breaks your new phones", "Blind", "Unable to finish a sentence", "Height of a dwarf",
-    "Allergic to everything"
+    "Allergic to everything", "Has helicopter parents that constantly interfere", "Pregnant", "Their hands are constantly slimy",
+    "Trying to recruit you to a pyramid scheme", "Rice purity test score of 0", "Amputee", "As basic as they get", "College nickname: Cum dumpster",
+    "Screams so loud during sex, the police get called everytime", "They're married", "They're a vampire", "Changes personalities everytime they sneeze",
+    "Only speaks in hashtags", "Regularly fucks goats", "Only speaks in third person", "They hate your parents", "You are allergic to them",
+    "They shed like a snake", "They have no teeth", "Their parents join in on the sex"
 ];
 
 module.exports = {
