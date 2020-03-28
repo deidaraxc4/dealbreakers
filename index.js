@@ -251,7 +251,8 @@ const onNewWebSocketConnection = (socket) => {
             if(players[socket.id]) {
                 //unready all players in the room
                 gameRooms[roomCode].unreadyAllPlayers();
-                //emit something to the room to let everyone else know that guy left so we can updatee the waiting screeen
+                //emit something to the room to let everyone else know that guy left so we can update the waiting screeen
+                //TODO clean up submissions, the players object and all cards
                 const newPlayerList = gameRooms[roomCode].playerList.filter(player => player !== players[socket.id].name);
                 gameRooms[roomCode].playerList = newPlayerList;
                 io.in(players[socket.id].roomCode).emit("updatePlayerList", { players: newPlayerList});

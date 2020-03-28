@@ -24,7 +24,8 @@ const whiteCards = [
     "Eats ass", "Can talk to the dead", "Will keep you warm when you're cold", "Will give you the best haircuts", "Dentist", "Master swordsman",
     "Ninja", "Beautiful eyes", "Kisses taste like honey", "Instructor at 1Million dance studio", "Holds 3 world records", "Makes the sickest edm beats",
     "Asian baby girl or Asian bible girl, your choice", "Is walking wifi hotspot", "Always down for sex", "Owns a esports team", "Ski instructor",
-    "Park ranger", "College professor", "Screenwriter for Marvel movies"
+    "Park ranger", "College professor", "Screenwriter for Marvel movies", "Greek god", "Saint", "Real estate expert", "Demon slayer",
+    "Has senzu bean tree", "NY Times best selling author", "Spontaneous"
 ];
 
 const redCards = [
@@ -49,14 +50,18 @@ const redCards = [
     "Spends half your paycheck, every paycheck", "Neckbeard", "Biggest simp ever", "Has no physical assets whatsoever", "Kink shames you",
     "Recently had sex with your parents", "Only has sex if they are getting gangbanged", "Has as much acne as they have hair", "Bald",
     "Constantly recites the bee movie", "Thinks your job is lame", "Their kiss tastes like semen", "Likes having sex with homeless people",
-    "Speaks only in sarcasm", "Dead", "Never showers/baths", "Toxic", "Chain smokes 10 packs a day", "Hitler reincarnated", "Bites during oral",
+    "Speaks only in sarcasm", "Dead", "Never showers/bathes", "Toxic", "Chain smokes 10 packs a day", "Hitler reincarnated", "Bites during oral",
     "Shits during anal", "Obese", "Maturity of 5 year old", "Forgets your name constantly", "Shows no physicaly affection",
     "Imaginary", "Hands are always ice cold", "Breaks your new phones", "Blind", "Unable to finish a sentence", "Height of a dwarf",
     "Allergic to everything", "Has helicopter parents that constantly interfere", "Pregnant", "Their hands are constantly slimy",
     "Trying to recruit you to a pyramid scheme", "Rice purity test score of 0", "Amputee", "As basic as they get", "College nickname: Cum dumpster",
     "Screams so loud during sex, the police get called everytime", "They're married", "They're a vampire", "Changes personalities everytime they sneeze",
     "Only speaks in hashtags", "Regularly fucks goats", "Only speaks in third person", "They hate your parents", "You are allergic to them",
-    "They shed like a snake", "They have no teeth", "Their parents join in on the sex"
+    "They shed like a snake", "They have no teeth", "Their parents join in on the sex", "They're your best friend's ex",
+    "Will kill dogs on sight", "Talks down to you", "Their profile picture was photoshopped", "Has 10 extra chromosomes", "Ribbits randomly",
+    "Always on their phone on dates", "Has dreadlocks on their pubes", "It's your ex", "Has bones as fragile as glass", "Lives in a cave",
+    "Radioactive", "Fungus growing on their back", "Forces you into being vegan", "Leaks your internet history(including incognito) to your family/friends",
+    "Uploads all sex sessions online for the world to see"
 ];
 
 module.exports = {
