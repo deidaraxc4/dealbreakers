@@ -24,6 +24,7 @@ class GameRoom {
         this.currentSingleSocketId = null;
         this.stage = "Waiting on players to add perks...";
         this.submissions = {};//socket id key to Date object value
+        this.started = false;
     }
 
     unreadyAllPlayers() {
@@ -281,6 +282,11 @@ const onNewWebSocketConnection = (socket) => {
                 socket.emit("badUsername", {message: "That username is already taken"});
                 return;
             }
+            // check if the game already started, if it did don't allow them in
+            if(gameRooms[data.gameId].started) {
+                socket.emit("gameInProgress", {message: "That game is already in progress"});
+                return;
+            }
             socket.join(data.gameId);
             gameRooms[data.gameId].players[socket.id] = new Player(data.username, socket.id, data.gameId);
             gameRooms[data.gameId].playerList.push(data.username);
@@ -303,6 +309,8 @@ const onNewWebSocketConnection = (socket) => {
             gameRooms[data.gameId].setSinglePlayer();
             // deal 4 perks 2 dealbreakers to everyone
             gameRooms[data.gameId].giveEveryoneCards();
+            // mark game as started
+            gameRooms[data.gameId].started = true;
             gameRooms[data.gameId].startRound();
         }
     };

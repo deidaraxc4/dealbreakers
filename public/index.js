@@ -23,6 +23,7 @@ const IO = {
         socket.on("leftOnRead", IO.onLeftOnRead);
         socket.on("promptToStartNextRound", IO.onPromptToStartNextRound);
         socket.on("informWinner", IO.onInformWinner);
+        socket.on("gameInProgress", IO.onGameInProgress);
     },
 
     onNewGameCreated: (data) => {
@@ -36,6 +37,10 @@ const IO = {
     },
 
     onBadUserName: (data) => {
+        window.alert(data.message);
+    },
+
+    onGameInProgress: (data) => {
         window.alert(data.message);
     },
 
