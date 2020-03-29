@@ -25,7 +25,7 @@ const whiteCards = [
     "Ninja", "Beautiful eyes", "Kisses taste like honey", "Instructor at 1Million dance studio", "Holds 3 world records", "Makes the sickest edm beats",
     "Asian baby girl or Asian bible girl, your choice", "Is walking wifi hotspot", "Always down for sex", "Owns a esports team", "Ski instructor",
     "Park ranger", "College professor", "Screenwriter for Marvel movies", "Greek god", "Saint", "Real estate expert", "Demon slayer",
-    "Has senzu bean tree", "NY Times best selling author", "Spontaneous"
+    "Has senzu bean tree", "NY Times best selling author", "Spontaneous", "Ghost hunter", "Can talk to you with telepathy"
 ];
 
 const redCards = [
@@ -61,7 +61,8 @@ const redCards = [
     "Will kill dogs on sight", "Talks down to you", "Their profile picture was photoshopped", "Has 10 extra chromosomes", "Ribbits randomly",
     "Always on their phone on dates", "Has dreadlocks on their pubes", "It's your ex", "Has bones as fragile as glass", "Lives in a cave",
     "Radioactive", "Fungus growing on their back", "Forces you into being vegan", "Leaks your internet history(including incognito) to your family/friends",
-    "Uploads all sex sessions online for the world to see"
+    "Uploads all sex sessions online for the world to see", "Believes essential oils work", "Won't allow internet in the house",
+    "Doesn't know how to use any technology past the 70s", "Fucks random person everytime they drink alcohol"
 ];
 
 module.exports = {
